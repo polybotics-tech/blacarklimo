@@ -7,6 +7,7 @@ import {
 } from "@/src/utils/datetime";
 import {
   BookingOrderRecordType,
+  BookingOrderWithPaymentsRecordType,
   DiscountRecordType,
   PaginationMetaType,
   TransactionRecordType,
@@ -85,7 +86,7 @@ const RecordsComponent = () => {
   const [activeSection, setActiveSection] = React.useState("bookings");
 
   const [records, setRecords] = React.useState<
-    BookingOrderRecordType[] | TransactionRecordType[]
+    BookingOrderWithPaymentsRecordType[] | TransactionRecordType[]
   >([]);
   const [isFetchingRecords, setIsFetchingRecords] = React.useState(false);
   const [metaData, setMetaData] = React.useState<PaginationMetaType>({
@@ -118,7 +119,7 @@ const RecordsComponent = () => {
       { name: "amount", w: 150 },
       { name: "status", w: 150 },
       { name: "method", w: 180 },
-      { name: "booking id", w: 300 },
+      { name: "payment id", w: 300 },
     ];
 
     if (activeSection === "bookings") {
@@ -771,7 +772,7 @@ const TransactionComponent = ({
           className="h-8 px-2 bg-sec-bg centralize"
           style={{ width: 300, minWidth: 300 }}
         >
-          <p className="text-[11px]">{record.bookingId}</p>
+          <p className="text-[11px]">{record.requestId}</p>
         </div>
       </div>
 
@@ -803,10 +804,10 @@ const TransactionComponent = ({
                 </li>
 
                 <li className="w-full flex items-center justify-between gap-4">
-                  <p className="text-sec-text">Booking ID</p>
+                  <p className="text-sec-text">Payment ID</p>
 
                   <p className="text-pri-text font-medium uppercase">
-                    {record.bookingId}
+                    {record.requestId}
                   </p>
                 </li>
 
