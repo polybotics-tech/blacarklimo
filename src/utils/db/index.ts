@@ -90,6 +90,7 @@ export async function createAdmin(
   email: string,
   passwordHash: string,
   fullname: string,
+  role = "admin",
 ) {
   await ensureDatabaseSchema();
 
@@ -98,12 +99,13 @@ export async function createAdmin(
     INSERT INTO ${DB_TABLE.admin} (
       email,
       password_hash,
-      full_name
+      full_name,
+      admin
     )
-    VALUES ($1, $2, $3)
+    VALUES ($1, $2, $3, $4)
     RETURNING *
     `,
-    [email, passwordHash, fullname],
+    [email, passwordHash, fullname, role],
   );
 
   return result.rows[0];

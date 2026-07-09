@@ -7,6 +7,7 @@ export async function POST(request: Request) {
       email: string;
       password: string;
       fullname: string;
+      role?: string;
     };
 
     if (!body.email || !body.password) {

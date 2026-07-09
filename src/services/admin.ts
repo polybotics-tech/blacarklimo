@@ -9,8 +9,9 @@ async function registerAdmin(body: {
   email: string;
   password: string;
   fullname: string;
+  role?: string;
 }): Promise<{ error?: string; accessToken?: string }> {
-  const { email, password, fullname } = body;
+  const { email, password, fullname, role } = body;
 
   const isExisting = await findAdminByEmail(email);
   if (isExisting) {
@@ -19,7 +20,7 @@ async function registerAdmin(body: {
 
   const password_hash = hash.generate(password);
 
-  const admin = await createAdmin(email, password_hash, fullname);
+  const admin = await createAdmin(email, password_hash, fullname, role);
 
   if (!admin) {
     return { error: "Something went wrong" };
