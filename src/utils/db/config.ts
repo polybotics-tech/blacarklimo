@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 CREATE INDEX IF NOT EXISTS booking_customer_email_idx ON bookings(customer_email);
 CREATE INDEX IF NOT EXISTS booking_pickup_datetime_idx ON bookings(pickup_datetime);
 
-CREATE INDEX IF NOT EXISTS transactions_booking_id_idx ON transactions(booking_id);
+CREATE INDEX IF NOT EXISTS transactions_request_id_idx ON transactions(request_id);
 
 CREATE INDEX IF NOT EXISTS vehicle_is_active_idx ON vehicles(is_active);
 `;
