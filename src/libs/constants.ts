@@ -25,10 +25,18 @@ const constants = {
       codes: (page: number) => `discount_codes:${page}`,
       count_codes: () => `discount_count_codes:all`,
     },
+    analytics: {
+      summary: () => `analytics_summary:all`,
+    },
     payment: {
       request: (id: string) => `payment_request:${id}`,
       requests: (bookingId?: string, status?: string) =>
         `payment_requests:${bookingId ?? ""}_${status?.trim()?.toLowerCase()}`,
+    },
+    vehicles: {
+      order: (id: string) => `vehicle_order:${id}`,
+      orders: (activeOnly: boolean) => `vehicle_orders:${activeOnly}`,
+      count_orders: () => `vehicle_count_orders:all`,
     },
   },
 
@@ -41,6 +49,14 @@ const constants = {
   db: {
     limit: 20,
     defaultPage: 1,
+    table: {
+      admin: "admins",
+      discount: "discounts",
+      vehicle: "vehicles",
+      booking: "bookings",
+      paymentRequest: "payment_requests",
+      transaction: "transactions",
+    },
   },
 
   token: {

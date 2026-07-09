@@ -1,4 +1,5 @@
 import { validateAccessToken } from "@/src/services/admin";
+import { getDashboardAnalytics } from "@/src/utils/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -12,22 +13,29 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    const analytics = await getDashboardAnalytics();
+
+    if (!analytics) {
+      return NextResponse.json(
+        { success: false, message: "Unable to fetch analytics" },
+        { status: 500 },
+      );
+    }
+
     return NextResponse.json({
       success: true,
       data: {
-        admin,
+        analytics,
       },
     });
   } catch (error) {
-    //console.error("admin login error:", error);
+    //console.error("Get analytic error:", error);
 
     return NextResponse.json(
       {
         success: false,
         message:
-          error instanceof Error
-            ? error.message
-            : "Unable to get admin failed.",
+          error instanceof Error ? error.message : "Analytic fetch failed.",
       },
       { status: 500 },
     );

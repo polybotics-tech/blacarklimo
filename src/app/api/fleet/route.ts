@@ -1,7 +1,15 @@
+import constants from "@/src/libs/constants";
 import { validateAccessToken } from "@/src/services/admin";
-import { createVehicle, getMultipleVehicles } from "@/src/utils/db";
+import { RedisCache } from "@/src/utils/cache";
+import {
+  countAllVehicles,
+  createVehicle,
+  getMultipleVehicles,
+  updateVehicleSortOrder,
+} from "@/src/utils/db";
 import {
   VehicleRecordType,
+  VehicleSortOrderUpdateType,
   VehicleUpdateRecordType,
 } from "@/src/utils/db/types";
 import { NextRequest, NextResponse } from "next/server";
@@ -19,7 +27,12 @@ export async function POST(request: NextRequest) {
 
     const body = (await request.json()) as VehicleUpdateRecordType;
 
-    const vehicle: VehicleRecordType | null = await createVehicle(body);
+    const totalNumOfVehicles: number = await countAllVehicles();
+
+    const vehicle: VehicleRecordType | null = await createVehicle({
+      ...body,
+      sortOrder: Number(totalNumOfVehicles + 1),
+    });
 
     if (!vehicle) {
       return NextResponse.json(
@@ -27,6 +40,15 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+
+    await RedisCache.delete(
+      [
+        constants.cacheKeyTemp.vehicles.orders(false),
+        constants.cacheKeyTemp.vehicles.orders(true),
+        constants.cacheKeyTemp.vehicles.count_orders(),
+      ],
+      true,
+    );
 
     return NextResponse.json({
       success: true,
@@ -42,6 +64,57 @@ export async function POST(request: NextRequest) {
         success: false,
         message:
           error instanceof Error ? error.message : "Unable to create vehicle",
+      },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const { error, admin } = await validateAccessToken(request);
+
+    if (error) {
+      return NextResponse.json(
+        { success: false, message: error },
+        { status: 401 },
+      );
+    }
+
+    const body = (await request.json()) as VehicleSortOrderUpdateType;
+
+    const updated = await updateVehicleSortOrder(body);
+    if (!updated) {
+      return NextResponse.json(
+        { success: false, message: "Unable to update vehicle order" },
+        { status: 400 },
+      );
+    }
+
+    const vehicles = await getMultipleVehicles();
+    await RedisCache.delete(
+      [
+        constants.cacheKeyTemp.vehicles.orders(false),
+        constants.cacheKeyTemp.vehicles.orders(true),
+        constants.cacheKeyTemp.vehicles.count_orders(),
+      ],
+      true,
+    );
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        vehicles,
+      },
+    });
+  } catch (error) {
+    //console.error("Update vehicle error:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "Unable to update vehicle.",
       },
       { status: 500 },
     );

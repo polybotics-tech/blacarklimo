@@ -19,11 +19,7 @@ export const RedisCache = {
       return null;
     }
   },
-  save: async (
-    key: string,
-    data?: string | number | object,
-    ttl: number = 1800,
-  ) => {
+  save: async (key: string, data?: unknown, ttl: number = 1800) => {
     try {
       //--cache data to memory
       if (!key || typeof data === "undefined") return false;

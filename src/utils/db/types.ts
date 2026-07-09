@@ -143,6 +143,8 @@ export type TransactionRow = {
 export type VehicleRecordType = VehicleType & {
   isActive: boolean;
 
+  sortOrder: number;
+
   createdAt: string;
   updatedAt: string;
 };
@@ -151,6 +153,8 @@ export type VehicleUpdateRecordType = Omit<
   VehicleRecordType,
   "id" | "createdAt" | "updatedAt" | "uri"
 >;
+
+export type VehicleSortOrderUpdateType = { id: string; newOrder: number }[];
 
 export type VehicleRow = {
   id: string;
@@ -169,6 +173,8 @@ export type VehicleRow = {
   num_of_luggage: number;
 
   is_active: boolean;
+
+  sort_order: number;
 
   created_at: Date;
   updated_at: Date;
@@ -223,6 +229,20 @@ export type AdminRecordType = {
   role: string;
 
   createdAt: string;
+};
+
+export type AnalyticsRow = {
+  monthly_earnings: string;
+  annual_earnings: string;
+  total_customers: string;
+  paid_bookings: string;
+};
+
+export type AnalyticsRecordType = {
+  monthlyEarnings: number;
+  annualEarnings: number;
+  totalCustomers: number;
+  paidBookings: number;
 };
 
 //-----------------------

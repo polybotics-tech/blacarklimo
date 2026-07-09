@@ -12,6 +12,8 @@ import { DATABASE_URL, dbConfig, schemaSql } from "@/src/utils/db/config";
 import {
   AdminRecordType,
   AdminRow,
+  AnalyticsRecordType,
+  AnalyticsRow,
   BookingOrderRecordType,
   BookingOrderRow,
   BookingOrderWithPaymentsRecordType,
@@ -26,6 +28,7 @@ import {
   TransactionRow,
   VehicleRecordType,
   VehicleRow,
+  VehicleSortOrderUpdateType,
   VehicleUpdateRecordType,
 } from "@/src/utils/db/types";
 import constants from "@/src/libs/constants";
@@ -38,6 +41,7 @@ declare global {
 }
 
 const DEFAULT_LIMIT = constants.db.limit;
+const DB_TABLE = constants.db.table;
 
 function getPool() {
   if (!DATABASE_URL) {
@@ -91,7 +95,7 @@ export async function createAdmin(
 
   const result = await query(
     `
-    INSERT INTO admins (
+    INSERT INTO ${DB_TABLE.admin} (
       email,
       password_hash,
       full_name
@@ -114,7 +118,7 @@ export async function findAdminByEmail(email: string) {
     const result = await query<Parameters<typeof mapAdmin>[0]>(
       `
       SELECT *
-      FROM admins
+      FROM ${DB_TABLE.admin}
       WHERE email = $1
       LIMIT 1
       `,
@@ -135,7 +139,7 @@ export async function findAdminById(id: string) {
     const result = await query<Parameters<typeof mapAdmin>[0]>(
       `
       SELECT *
-      FROM admins
+      FROM ${DB_TABLE.admin}
       WHERE id = $1
       LIMIT 1
       `,
@@ -145,6 +149,69 @@ export async function findAdminById(id: string) {
     return result.rows[0] ? mapAdmin(result.rows[0]) : null;
   } catch (error) {
     console.log(error instanceof Error ? error.message : "get admin error");
+    return null;
+  }
+}
+
+//----------ANALYTICS
+function mapAnalytics(row: AnalyticsRow): AnalyticsRecordType {
+  return {
+    monthlyEarnings: Number(row.monthly_earnings),
+    annualEarnings: Number(row.annual_earnings),
+    totalCustomers: Number(row.total_customers),
+    paidBookings: Number(row.paid_bookings),
+  };
+}
+
+export async function getDashboardAnalytics() {
+  try {
+    //check if in cache before fetching from db
+    const cacheKey = constants.cacheKeyTemp.analytics.summary();
+
+    const cached = await RedisCache.fetch(cacheKey);
+    if (cached) {
+      return cached as AnalyticsRecordType;
+    }
+    ///////////////////
+
+    await ensureDatabaseSchema();
+
+    const result = await query<AnalyticsRow>(`
+      SELECT
+          COALESCE(
+              SUM(total)
+              FILTER (
+                  WHERE payment_status = 'paid'
+                  AND DATE_TRUNC('month', created_at) = DATE_TRUNC('month', NOW())
+              ),
+              0
+          ) AS monthly_earnings,
+
+          COALESCE(
+              SUM(total)
+              FILTER (
+                  WHERE payment_status = 'paid'
+                  AND DATE_TRUNC('year', created_at) = DATE_TRUNC('year', NOW())
+              ),
+              0
+          ) AS annual_earnings,
+
+          COUNT(DISTINCT customer_email) AS total_customers,
+
+          COUNT(*)
+              FILTER (
+                  WHERE payment_status = 'paid'
+              ) AS paid_bookings
+
+      FROM ${constants.db.table.booking};
+    `);
+
+    const data = result.rows[0] ? mapAnalytics(result.rows[0]) : null;
+
+    await RedisCache.save(cacheKey, data);
+    return data;
+  } catch (error) {
+    console.log(error instanceof Error ? error.message : "get analytics error");
     return null;
   }
 }
@@ -173,7 +240,7 @@ export async function createDiscount(
 
   const result = await query<DiscountRow>(
     `
-    INSERT INTO discounts (
+    INSERT INTO ${DB_TABLE.discount} (
       code,
       value,
       is_fixed_price
@@ -192,7 +259,7 @@ export async function getDiscountByCode(code: string) {
     await ensureDatabaseSchema();
 
     const result = await query<Parameters<typeof mapDiscount>[0]>(
-      "SELECT * FROM discounts WHERE code = $1 LIMIT 1",
+      `SELECT * FROM ${DB_TABLE.discount} WHERE code = $1 LIMIT 1`,
       [code],
     );
 
@@ -219,11 +286,14 @@ export async function getMultipleDiscounts(page: number) {
     const offset = generateDbOffset(page);
 
     const result = await query<DiscountRow>(
-      `SELECT * FROM discounts ORDER BY created_at DESC LIMIT ${DEFAULT_LIMIT} OFFSET ${offset}`,
+      `SELECT * FROM ${DB_TABLE.discount} ORDER BY created_at DESC LIMIT ${DEFAULT_LIMIT} OFFSET ${offset}`,
       [],
     );
 
-    return result.rows.length ? mapMultipleDiscounts(result.rows) : [];
+    const data = result.rows.length ? mapMultipleDiscounts(result.rows) : [];
+
+    await RedisCache.save(cacheKey, data);
+    return data;
   } catch (error) {
     console.log(error instanceof Error ? error.message : "get discounts error");
     return [];
@@ -243,12 +313,11 @@ export async function countAllDiscounts() {
 
     await ensureDatabaseSchema();
 
-    const result = await query(`SELECT COUNT(*) FROM discounts`);
+    const result = await query(`SELECT COUNT(*) FROM ${DB_TABLE.discount}`);
 
     const count = Number(result.rows[0]?.count ?? 0);
 
     await RedisCache.save(cacheKey, count);
-
     return count;
   } catch (error) {
     console.log(
@@ -264,7 +333,7 @@ export async function deleteDiscountById(id: string) {
 
     const result = await query<DiscountRow>(
       `
-      DELETE FROM discounts WHERE id = $1
+      DELETE FROM ${DB_TABLE.discount} WHERE id = $1
       `,
       [id],
     );
@@ -324,7 +393,7 @@ export async function createBookingOrder({
   const orderId = randomUUID();
   const result = await query<Parameters<typeof mapBookingOrder>[0]>(
     `
-    INSERT INTO bookings (
+    INSERT INTO ${DB_TABLE.booking} (
       id,
       trip_choice,
       vehicle,
@@ -402,11 +471,14 @@ export async function getBookingOrder(orderId: string) {
     await ensureDatabaseSchema();
 
     const result = await query<Parameters<typeof mapBookingOrder>[0]>(
-      "SELECT * FROM bookings WHERE id = $1 LIMIT 1",
+      `SELECT * FROM ${DB_TABLE.booking} WHERE id = $1 LIMIT 1`,
       [orderId],
     );
 
-    return result.rows[0] ? mapBookingOrder(result.rows[0]) : null;
+    const data = result.rows[0] ? mapBookingOrder(result.rows[0]) : null;
+
+    await RedisCache.save(cacheKey, data);
+    return data;
   } catch (error) {
     console.log(
       error instanceof Error ? error.message : "get booking order error",
@@ -449,11 +521,15 @@ export async function getMultipleBookingOrders(page: number, q = "") {
     const params = isSearch ? [`%${searchText}%`] : [];
 
     const result = await query<BookingOrderRow>(
-      `SELECT * FROM bookings${searchQuery} ORDER BY created_at DESC LIMIT ${DEFAULT_LIMIT} OFFSET ${offset}`,
+      `SELECT * FROM ${DB_TABLE.booking}${searchQuery} ORDER BY created_at DESC LIMIT ${DEFAULT_LIMIT} OFFSET ${offset}`,
       params,
     );
 
-    return result.rows.length ? mapMultipleBookingOrders(result.rows) : [];
+    const data = result.rows.length
+      ? mapMultipleBookingOrders(result.rows)
+      : [];
+    await RedisCache.save(cacheKey, data);
+    return data;
   } catch (error) {
     console.log(
       error instanceof Error ? error.message : "get booking order error",
@@ -481,14 +557,13 @@ export async function countAllBookingOrders(q = "") {
     const params = isSearch ? [`%${searchText}%`] : [];
 
     const result = await query(
-      `SELECT COUNT(*) FROM bookings${searchQuery}`,
+      `SELECT COUNT(*) FROM ${DB_TABLE.booking}${searchQuery}`,
       params,
     );
 
     const count = Number(result.rows[0]?.count ?? 0);
 
     await RedisCache.save(cacheKey, count);
-
     return count;
   } catch (error) {
     console.log(
@@ -501,7 +576,7 @@ export async function countAllBookingOrders(q = "") {
 export async function markBookingPaid(orderId: string) {
   await query(
     `
-    UPDATE bookings
+    UPDATE ${DB_TABLE.booking}
     SET order_status = 'confirmed',
         payment_status = 'paid',
         updated_at = NOW()
@@ -517,7 +592,7 @@ export async function deleteBookingOrderById(orderId: string) {
 
     const result = await query<BookingOrderRow>(
       `
-      DELETE FROM bookings WHERE id = $1
+      DELETE FROM ${DB_TABLE.booking} WHERE id = $1
       `,
       [orderId],
     );
@@ -569,7 +644,7 @@ export async function createPaymentRequest({
   const requestId = randomUUID();
   const result = await query<Parameters<typeof mapPaymentRequest>[0]>(
     `
-    INSERT INTO payment_requests (
+    INSERT INTO ${DB_TABLE.paymentRequest} (
       id,
       booking_id,
       type, 
@@ -594,7 +669,7 @@ export async function updatePaymentRequestStatus(
 ) {
   await query(
     `
-    UPDATE payment_requests
+    UPDATE ${DB_TABLE.paymentRequest}
     SET status = $1,
         updated_at = NOW()
     WHERE id = $2
@@ -617,11 +692,14 @@ export async function getPaymentRequest(requestId: string) {
     await ensureDatabaseSchema();
 
     const result = await query<Parameters<typeof mapPaymentRequest>[0]>(
-      "SELECT * FROM payment_requests WHERE id=$1 LIMIT 1",
+      `SELECT * FROM ${DB_TABLE.paymentRequest} WHERE id=$1 LIMIT 1`,
       [requestId],
     );
 
-    return result.rows[0] ? mapPaymentRequest(result.rows[0]) : null;
+    const data = result.rows[0] ? mapPaymentRequest(result.rows[0]) : null;
+
+    await RedisCache.save(cacheKey, data);
+    return data;
   } catch (error) {
     console.log(
       error instanceof Error ? error.message : "get payment request error",
@@ -667,12 +745,17 @@ export async function getMultiplePaymentRequests({
 
     const result = await query<PaymentRequestRow>(
       byBooking
-        ? `SELECT * FROM payment_requests WHERE booking_id=$1 ORDER BY created_at DESC`
-        : `SELECT * FROM payment_requests WHERE status=$1 ORDER BY created_at DESC`,
+        ? `SELECT * FROM ${DB_TABLE.paymentRequest} WHERE booking_id=$1 ORDER BY created_at DESC`
+        : `SELECT * FROM ${DB_TABLE.paymentRequest} WHERE status=$1 ORDER BY created_at DESC`,
       params,
     );
 
-    return result.rows.length ? mapMultiplePaymentRequests(result.rows) : [];
+    const data = result.rows.length
+      ? mapMultiplePaymentRequests(result.rows)
+      : [];
+
+    await RedisCache.save(cacheKey, data);
+    return data;
   } catch (error) {
     console.log(
       error instanceof Error ? error.message : "get payment requests error",
@@ -687,7 +770,7 @@ export async function deletePaymentRequestByBookingId(bookingId: string) {
 
     const result = await query<PaymentRequestRow>(
       `
-      DELETE FROM payment_requests WHERE booking_id = $1
+      DELETE FROM ${DB_TABLE.paymentRequest} WHERE booking_id = $1
       `,
       [bookingId],
     );
@@ -707,7 +790,7 @@ export async function deletePaymentRequestById(requestId: string) {
 
     const result = await query<PaymentRequestRow>(
       `
-      DELETE FROM payment_requests WHERE id = $1
+      DELETE FROM ${DB_TABLE.paymentRequest} WHERE id = $1
       `,
       [requestId],
     );
@@ -769,7 +852,7 @@ export async function createTransaction({
 
   const result = await query<Parameters<typeof mapTransaction>[0]>(
     `
-    INSERT INTO transactions (
+    INSERT INTO ${DB_TABLE.transaction} (
       id,
       request_id,
       paypal_order_id,
@@ -825,11 +908,14 @@ export async function getTransaction(transactionId: string) {
     await ensureDatabaseSchema();
 
     const result = await query<Parameters<typeof mapTransaction>[0]>(
-      "SELECT * FROM transactions WHERE id = $1 LIMIT 1",
+      `SELECT * FROM ${DB_TABLE.transaction} WHERE id = $1 LIMIT 1`,
       [transactionId],
     );
 
-    return result.rows[0] ? mapTransaction(result.rows[0]) : null;
+    const data = result.rows[0] ? mapTransaction(result.rows[0]) : null;
+
+    await RedisCache.save(cacheKey, data);
+    return data;
   } catch (error) {
     console.log(
       error instanceof Error ? error.message : "get transaction error",
@@ -859,11 +945,14 @@ export async function getMultipleTransactions(page: number, q = "") {
     const params = isSearch ? [`%${searchText}%`] : [];
 
     const result = await query<TransactionRow>(
-      `SELECT * FROM transactions${searchQuery} ORDER BY created_at DESC LIMIT ${DEFAULT_LIMIT} OFFSET ${offset}`,
+      `SELECT * FROM ${DB_TABLE.transaction}${searchQuery} ORDER BY created_at DESC LIMIT ${DEFAULT_LIMIT} OFFSET ${offset}`,
       params,
     );
 
-    return result.rows.length ? mapMultipleTransactions(result.rows) : [];
+    const data = result.rows.length ? mapMultipleTransactions(result.rows) : [];
+
+    await RedisCache.save(cacheKey, data);
+    return data;
   } catch (error) {
     console.log(
       error instanceof Error ? error.message : "get transactions error",
@@ -891,14 +980,13 @@ export async function countAllTransactions(q = "") {
     const params = isSearch ? [`%${searchText}%`] : [];
 
     const result = await query(
-      `SELECT COUNT(*) FROM transactions${searchQuery}`,
+      `SELECT COUNT(*) FROM ${DB_TABLE.transaction}${searchQuery}`,
       params,
     );
 
     const count = Number(result.rows[0]?.count ?? 0);
 
     await RedisCache.save(cacheKey, count);
-
     return count;
   } catch (error) {
     console.log(
@@ -908,7 +996,7 @@ export async function countAllTransactions(q = "") {
   }
 }
 
-//----------FLEETS
+//----------VEHICLES
 function mapVehicle(row: VehicleRow): VehicleRecordType {
   return {
     id: row.id,
@@ -928,6 +1016,8 @@ function mapVehicle(row: VehicleRow): VehicleRecordType {
 
     isActive: row.is_active,
 
+    sortOrder: Number(row.sort_order),
+
     createdAt: row.created_at.toISOString(),
     updatedAt: row.updated_at.toISOString(),
   };
@@ -942,7 +1032,7 @@ export async function createVehicle(vehicle: VehicleUpdateRecordType) {
 
   const result = await query<Parameters<typeof mapVehicle>[0]>(
     `
-    INSERT INTO vehicles (
+    INSERT INTO ${DB_TABLE.vehicle} (
       category,
       class,
       name,
@@ -950,10 +1040,11 @@ export async function createVehicle(vehicle: VehicleUpdateRecordType) {
       price_per_mile,
       num_of_passenger,
       num_of_luggage,
-      is_active
+      is_active,
+      sort_order
     )
     VALUES (
-      $1,$2,$3,$4,$5,$6,$7,$8
+      $1,$2,$3,$4,$5,$6,$7,$8,$9
     )
     RETURNING *
     `,
@@ -966,6 +1057,7 @@ export async function createVehicle(vehicle: VehicleUpdateRecordType) {
       vehicle.numOfPassenger,
       vehicle.numOfLuggage,
       vehicle.isActive,
+      vehicle.sortOrder,
     ],
   );
 
@@ -980,7 +1072,7 @@ export async function updateVehicle(
 
   const result = await query<Parameters<typeof mapVehicle>[0]>(
     `
-    UPDATE vehicles
+    UPDATE ${DB_TABLE.vehicle}
     SET
       category=$1,
       class=$2,
@@ -1015,7 +1107,7 @@ export async function updateVehiclePhotoUri(id: string, uri: string) {
 
   const result = await query<Parameters<typeof mapVehicle>[0]>(
     `
-    UPDATE vehicles
+    UPDATE ${DB_TABLE.vehicle}
     SET
       uri=$1,
       updated_at=NOW()
@@ -1028,47 +1120,132 @@ export async function updateVehiclePhotoUri(id: string, uri: string) {
   return result.rows[0] ? mapVehicle(result.rows[0]) : null;
 }
 
+export async function updateVehicleSortOrder(
+  orders: VehicleSortOrderUpdateType,
+) {
+  try {
+    await ensureDatabaseSchema();
+
+    const values = orders
+      .map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`)
+      .join(",");
+
+    const params = orders.flatMap((o) => [o.id, o.newOrder]);
+
+    await query(
+      `
+      UPDATE vehicles v
+      SET sort_order = u.sort_order
+      FROM (
+          VALUES ${values}
+      ) AS u(id, sort_order)
+      WHERE v.id = u.id;
+      `,
+      params,
+    );
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 export async function deleteVehicle(vehicleId: string) {
   await ensureDatabaseSchema();
 
-  await query("DELETE FROM vehicles WHERE id=$1", [vehicleId]);
+  await query("DELETE FROM ${DB_TABLE.vehicle} WHERE id=$1", [vehicleId]);
 
   return true;
 }
 
 export async function getVehicle(id: string) {
+  //check if in cache before fetching from db
+  const cacheKey = constants.cacheKeyTemp.vehicles.order(id);
+
+  const cached = await RedisCache.fetch(cacheKey);
+  if (cached) {
+    return cached as VehicleRecordType;
+  }
+  ///////////////////
+
   await ensureDatabaseSchema();
 
   const result = await query<Parameters<typeof mapVehicle>[0]>(
     `
       SELECT *
-      FROM vehicles
+      FROM ${DB_TABLE.vehicle}
       WHERE id=$1
       LIMIT 1
       `,
     [id],
   );
 
-  return result.rows[0] ? mapVehicle(result.rows[0]) : null;
+  const data = result.rows[0] ? mapVehicle(result.rows[0]) : null;
+
+  await RedisCache.save(cacheKey, data);
+  return data;
 }
 
 export async function getMultipleVehicles(activeOnly = true) {
+  //check if in cache before fetching from db
+  const cacheKey = constants.cacheKeyTemp.vehicles.orders(activeOnly);
+
+  const cached = await RedisCache.fetch(cacheKey);
+  if (cached) {
+    return cached as VehicleRecordType[];
+  }
+  ///////////////////
+
   await ensureDatabaseSchema();
 
   const result = await query<Parameters<typeof mapVehicle>[0]>(
     activeOnly
       ? `
         SELECT *
-        FROM vehicles
+        FROM ${DB_TABLE.vehicle}
         WHERE is_active=TRUE
-        ORDER BY created_at DESC
+        ORDER BY
+          sort_order ASC,
+          created_at DESC;
         `
       : `
         SELECT *
-        FROM vehicle
-        ORDER BY created_at DESC
+        FROM ${DB_TABLE.vehicle}
+        ORDER BY
+          sort_order ASC,
+          created_at DESC;
         `,
   );
 
-  return mapMultipleVehicles(result.rows);
+  const data = result?.rows?.length ? mapMultipleVehicles(result.rows) : [];
+
+  await RedisCache.save(cacheKey, data);
+  return data;
+}
+
+export async function countAllVehicles() {
+  try {
+    //check if in cache before fetching from db
+    const cacheKey = constants.cacheKeyTemp.vehicles.count_orders();
+
+    const cached = await RedisCache.fetch(cacheKey);
+    if (cached) {
+      return cached as number;
+    }
+    ///////////////////
+
+    await ensureDatabaseSchema();
+
+    const result = await query(`SELECT COUNT(*) FROM ${DB_TABLE.vehicle}`);
+
+    const count = Number(result.rows[0]?.count ?? 0);
+
+    await RedisCache.save(cacheKey, count);
+    return count;
+  } catch (error) {
+    console.log(
+      error instanceof Error ? error.message : "count vehicles error",
+    );
+    return 0;
+  }
 }
