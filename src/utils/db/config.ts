@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS payment_requests (
     id UUID PRIMARY KEY,
 
     booking_id UUID NOT NULL
-        REFERENCES booking(id)
+        REFERENCES bookings(id)
         ON DELETE CASCADE,
 
     type TEXT NOT NULL,
