@@ -1,4 +1,6 @@
+import constants from "@/src/libs/constants";
 import { validateAccessToken } from "@/src/services/admin";
+import { RedisCache } from "@/src/utils/cache";
 import {
   createVehicle,
   deleteVehicle,
@@ -68,6 +70,15 @@ export async function DELETE(
 
     await deleteVehicle(id);
 
+    await RedisCache.delete(
+      [
+        constants.cacheKeyTemp.vehicles.orders(false),
+        constants.cacheKeyTemp.vehicles.orders(true),
+        constants.cacheKeyTemp.vehicles.count_orders(),
+      ],
+      true,
+    );
+
     return NextResponse.json({ success: true, data: null });
   } catch (error) {
     //console.error("Get vehicle error:", error);
@@ -133,6 +144,15 @@ export async function PUT(
       );
     }
 
+    await RedisCache.delete(
+      [
+        constants.cacheKeyTemp.vehicles.orders(false),
+        constants.cacheKeyTemp.vehicles.orders(true),
+        constants.cacheKeyTemp.vehicles.count_orders(),
+      ],
+      true,
+    );
+
     return NextResponse.json({
       success: true,
       data: {
@@ -141,7 +161,7 @@ export async function PUT(
       },
     });
   } catch (error) {
-    //console.error("Update vehicle error:", error);
+    console.error("Update vehicle error:", error);
 
     return NextResponse.json(
       {

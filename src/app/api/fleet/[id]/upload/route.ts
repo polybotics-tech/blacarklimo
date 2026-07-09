@@ -85,8 +85,8 @@ export async function PUT(
       process.cwd(),
       "public",
       "assets",
-      "images",
       "uploads",
+      "images",
       "fleet",
     );
     await fs.mkdir(uploadDir, {
@@ -99,7 +99,7 @@ export async function PUT(
     await fs.writeFile(path.join(uploadDir, filename), resizedBuffer);
 
     //--UPDATE VEHICLE PHOTO URI
-    const imageUri = "/assets/images/uploads/fleet/" + filename;
+    const imageUri = "/assets/uploads/images/fleet/" + filename;
     const updatedVehicle = await updateVehiclePhotoUri(id, imageUri);
     if (!updatedVehicle) {
       return NextResponse.json({
