@@ -100,7 +100,7 @@ export async function createAdmin(
       email,
       password_hash,
       full_name,
-      admin
+      role
     )
     VALUES ($1, $2, $3, $4)
     RETURNING *
