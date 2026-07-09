@@ -91,7 +91,7 @@ export async function createAdmin(
 
   const result = await query(
     `
-    INSERT INTO admin (
+    INSERT INTO admins (
       email,
       password_hash,
       full_name
@@ -114,7 +114,7 @@ export async function findAdminByEmail(email: string) {
     const result = await query<Parameters<typeof mapAdmin>[0]>(
       `
       SELECT *
-      FROM admin
+      FROM admins
       WHERE email = $1
       LIMIT 1
       `,
@@ -135,7 +135,7 @@ export async function findAdminById(id: string) {
     const result = await query<Parameters<typeof mapAdmin>[0]>(
       `
       SELECT *
-      FROM admin
+      FROM admins
       WHERE id = $1
       LIMIT 1
       `,
