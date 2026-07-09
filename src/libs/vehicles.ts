@@ -1,0 +1,147 @@
+import { VehicleType } from "@/src/libs/types";
+
+export const popularVehicles: VehicleType[] = [
+  // ==========================================
+  // --- SEDAN CATEGORY ---
+  // ==========================================
+  {
+    id: "v-sedan-merc-s",
+    category: "sedan",
+    class: "premium",
+    name: "Mercedes-Benz S-Class (S 580)",
+    pricePerHour: 145,
+    pricePerMile: 7.15,
+    numOfPassenger: 3,
+    numOfLuggage: 2,
+    uri: "/assets/images/fleet/img-mbsc-2.png",
+  },
+  {
+    id: "v-sedan-bmw-7",
+    category: "sedan",
+    class: "premium",
+    name: "BMW 7-Series (760i xDrive)",
+    pricePerHour: 135,
+    pricePerMile: 6.5,
+    numOfPassenger: 3,
+    numOfLuggage: 3,
+    uri: "/assets/images/fleet/img-bmw-2.png",
+  },
+  /*{
+    id: "v-sedan-merc-e",
+    category: "sedan",
+    class: "executive",
+    name: "Mercedes-Benz E-Class (E 350)",
+    pricePerHour: 115,
+    pricePerMile: 5.0,
+    numOfPassenger: 3,
+    numOfLuggage: 3,
+    uri: "/assets/images/fleet/img-mbec-2.png",
+  },
+  {
+    id: "v-sedan-tesla-s",
+    category: "sedan",
+    class: "premium",
+    name: "Tesla Model S Plaid",
+    pricePerHour: 120,
+    pricePerMile: 5.0,
+    numOfPassenger: 3,
+    numOfLuggage: 3,
+    uri: "/assets/images/fleet/img-tmsp-2.png",
+  },*/
+
+  // ==========================================
+  // --- SUV CATEGORY ---
+  // ==========================================
+  {
+    id: "v-suv-escalade",
+    category: "suv",
+    class: "premium",
+    name: "Cadillac Escalade ESV",
+    pricePerHour: 130,
+    pricePerMile: 6.5,
+    numOfPassenger: 6,
+    numOfLuggage: 6,
+    uri: "/assets/images/fleet/img-cee-1.png",
+  },
+  {
+    id: "v-suv-navigator",
+    category: "suv",
+    class: "executive",
+    name: "Lincoln Navigator L",
+    pricePerHour: 120,
+    pricePerMile: 5.25,
+    numOfPassenger: 6,
+    numOfLuggage: 6,
+    uri: "/assets/images/fleet/img-lnl-1.png",
+  },
+  {
+    id: "v-suv-tahoe",
+    category: "suv",
+    class: "standard",
+    name: "Chevrolet Tahoe",
+    pricePerHour: 110,
+    pricePerMile: 5.0,
+    numOfPassenger: 6,
+    numOfLuggage: 5,
+    uri: "/assets/images/fleet/img-cte-1.png",
+  },
+  {
+    id: "v-suv-yukon",
+    category: "suv",
+    class: "executive",
+    name: "GMC Yukon Denali XL",
+    pricePerHour: 115,
+    pricePerMile: 5.0,
+    numOfPassenger: 6,
+    numOfLuggage: 6,
+    uri: "/assets/images/fleet/img-gmc-1.png",
+  },
+  {
+    id: "v-suv-suburban",
+    category: "suv",
+    class: "standard",
+    name: "Chevrolet Suburban",
+    pricePerHour: 110,
+    pricePerMile: 5.0,
+    numOfPassenger: 6,
+    numOfLuggage: 6,
+    uri: "/assets/images/fleet/img-csn-1.png",
+  },
+
+  // ==========================================
+  // --- COACH CATEGORY ---
+  // ==========================================
+  {
+    id: "v-coach-sprinter-limo",
+    category: "coach",
+    class: "premium",
+    name: "Mercedes-Benz Sprinter Limo",
+    pricePerHour: 175,
+    pricePerMile: 7.75,
+    numOfPassenger: 10,
+    numOfLuggage: 12,
+    uri: "/assets/images/fleet/img-mbsl-1.png",
+  },
+  {
+    id: "v-coach-transit",
+    category: "coach",
+    class: "standard",
+    name: "Ford Transit Passenger Van",
+    pricePerHour: 155,
+    pricePerMile: 6.25,
+    numOfPassenger: 12,
+    numOfLuggage: 10,
+    uri: "/assets/images/fleet/img-ftpv-1.png",
+  },
+  {
+    id: "v-coach-sprinter-comm",
+    category: "coach",
+    class: "executive",
+    name: "Mercedes-Benz Sprinter Commuter",
+    pricePerHour: 185,
+    pricePerMile: 8.25,
+    numOfPassenger: 14,
+    numOfLuggage: 14,
+    uri: "/assets/images/fleet/img-mbsr-1.png",
+  },
+];

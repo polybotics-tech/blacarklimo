@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+:root {
+  --background-primary: #0b0b0b;
+  --background-secondary: #121212;
+  --card-background: #181818;
+  --gold-primary: #d4af37;
+  --gold-secondary: #f1d27a;
+  --text-primary: #f5f5f5;
+  --text-secondary: #b0b0b0;
+  --text-dim: #5f5f5f;
+  --shadow-glow: rgba(212, 175, 55, 0.15);
+  --border-glow: rgba(212, 175, 55, 0.2);
+  --success: #3fa16a;
+}
+
+@theme {
+  --font-sora: var(--font-sora);
+  --font-poppins: var(--font-poppins);
+
+  --color-pri-bg: var(--background-primary);
+  --color-sec-bg: var(--background-secondary);
+  --color-card-bg: var(--card-background);
+  --color-pri-gold: var(--gold-primary);
+  --color-sec-gold: var(--gold-secondary);
+  --color-pri-text: var(--text-primary);
+  --color-sec-text: var(--text-secondary);
+  --color-dim-text: var(--text-dim);
+  --color-shadow-glow: var(--shadow-glow);
+  --color-border-glow: var(--border-glow);
+  --color-success: var(--success);
+}
+
+@layer base {
+  h1 {
+    @apply font-sora font-bold text-3xl text-pri-text;
+  }
+
+  h2 {
+    @apply font-sora font-semibold text-xl text-pri-text;
+  }
+
+  h3 {
+    @apply font-sora font-medium text-lg text-pri-text;
+  }
+
+  h4 {
+    @apply font-poppins font-medium text-base text-pri-text;
+  }
+
+  p {
+    @apply font-poppins text-xs text-sec-text;
+  }
+
+  button {
+    @apply flex items-center justify-center gap-2 hover:cursor-pointer outline-0;
+  }
+
+  input,
+  textarea {
+    @apply outline-0;
+  }
+}
+
+@utility no-scrollbars {
+  scroll-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility centralize {
+  @apply flex items-center justify-center;
+}
+
+@utility card-glow {
+  @apply bg-card-bg shadow-2xl shadow-shadow-glow border-[1.3px] border-border-glow;
+}
+
+body {
+  @apply bg-pri-bg text-pri-text font-poppins;
+}
