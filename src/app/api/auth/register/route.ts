@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    //console.error("admin login error:", error);
+    console.error("admin register error:", error);
 
     return NextResponse.json(
       {
