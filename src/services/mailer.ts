@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   from: process.env.EMAIL_USER,
 });
 
-export async function sendAdminBookingNotification(bookingId: string) {
+export async function sendAdminBookingEmailNotification(bookingId: string) {
   await transporter.sendMail({
     from: `Blacarklimo <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_USER,
@@ -38,6 +38,37 @@ export async function sendAdminBookingNotification(bookingId: string) {
         </body>
         </html>
     `,
+  });
+}
+
+type PushNotificationType = {
+  title: string;
+  body: string;
+  data: {
+    screen: "booking" | "transaction";
+    id: string;
+  };
+};
+export async function sendAdminPushNotification(
+  pushToken: string,
+  notification: PushNotificationType,
+) {
+  if (!notification || !pushToken) return;
+
+  await fetch("https://exp.host/--/api/v2/push/send", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      to: pushToken,
+      sound: "default",
+      title: notification.title,
+
+      body: notification.body,
+
+      data: notification.data,
+    }),
   });
 }
 

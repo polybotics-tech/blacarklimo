@@ -1,11 +1,15 @@
 import constants from "@/src/libs/constants";
 import { PayPalPaymentMethod } from "@/src/libs/types";
-import { sendAdminBookingNotification } from "@/src/services/mailer";
+import {
+  sendAdminBookingEmailNotification,
+  sendAdminPushNotification,
+} from "@/src/services/mailer";
 import { capturePayPalOrder } from "@/src/services/paypal";
 import { RedisCache } from "@/src/utils/cache";
 import {
   createTransaction,
   getBookingOrder,
+  getMultipleAdminPushTokens,
   getPaymentRequestWithBooking,
   markBookingPaid,
   updatePaymentRequestStatus,
@@ -116,7 +120,22 @@ export async function POST(
         true,
       );
 
-      sendAdminBookingNotification(order.id);
+      sendAdminBookingEmailNotification(order.id);
+
+      //--send push notification to admins
+      const adminPushTokens = await getMultipleAdminPushTokens();
+      if (adminPushTokens.length) {
+        adminPushTokens.forEach((admin) =>
+          sendAdminPushNotification(admin.expoPushToken, {
+            title: `Payment Transaction Successful`,
+            body: `${paymentRequest.description}`,
+            data: {
+              screen: "transaction",
+              id: transaction.id,
+            },
+          }),
+        );
+      }
     } else {
       await updatePaymentRequestStatus(paymentRequest.id, "cancelled");
     }

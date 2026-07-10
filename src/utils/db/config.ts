@@ -13,10 +13,12 @@ export const dbConfig: PoolConfig = {
       : undefined,
 };
 
+const DB_TABLE = constants.db.table;
+
 export const schemaSql = `
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-CREATE TABLE IF NOT EXISTS ${constants.db.table.admin} (
+CREATE TABLE IF NOT EXISTS ${DB_TABLE.admin} (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
   password_hash TEXT NOT NULL,
@@ -29,7 +31,17 @@ CREATE TABLE IF NOT EXISTS ${constants.db.table.admin} (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS ${constants.db.table.discount} (
+CREATE TABLE IF NOT EXISTS ${DB_TABLE.adminPushToken} (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    admin_id UUID NOT NULL REFERENCES ${DB_TABLE.admin}(id),
+
+    expo_push_token TEXT NOT NULL UNIQUE,
+
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS ${DB_TABLE.discount} (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
   code TEXT NOT NULL,
@@ -41,7 +53,7 @@ CREATE TABLE IF NOT EXISTS ${constants.db.table.discount} (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS ${constants.db.table.vehicle} (
+CREATE TABLE IF NOT EXISTS ${DB_TABLE.vehicle} (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
   category TEXT NOT NULL,
@@ -65,7 +77,7 @@ CREATE TABLE IF NOT EXISTS ${constants.db.table.vehicle} (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS ${constants.db.table.booking} (
+CREATE TABLE IF NOT EXISTS ${DB_TABLE.booking} (
   id UUID PRIMARY KEY,
 
   order_status TEXT NOT NULL DEFAULT 'pending_payment',
@@ -106,11 +118,11 @@ CREATE TABLE IF NOT EXISTS ${constants.db.table.booking} (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS ${constants.db.table.paymentRequest} (
+CREATE TABLE IF NOT EXISTS ${DB_TABLE.paymentRequest} (
     id UUID PRIMARY KEY,
 
     booking_id UUID NOT NULL
-        REFERENCES ${constants.db.table.booking}(id)
+        REFERENCES ${DB_TABLE.booking}(id)
         ON DELETE CASCADE,
 
     type TEXT NOT NULL,
@@ -125,10 +137,10 @@ CREATE TABLE IF NOT EXISTS ${constants.db.table.paymentRequest} (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS ${constants.db.table.transaction} (
+CREATE TABLE IF NOT EXISTS ${DB_TABLE.transaction} (
   id UUID PRIMARY KEY,
 
-  request_id UUID NOT NULL REFERENCES ${constants.db.table.paymentRequest}(id) ON DELETE CASCADE,
+  request_id UUID NOT NULL REFERENCES ${DB_TABLE.paymentRequest}(id) ON DELETE CASCADE,
   paypal_order_id TEXT NOT NULL,
   paypal_capture_id TEXT,
   paypal_payer_id TEXT,
@@ -145,10 +157,10 @@ CREATE TABLE IF NOT EXISTS ${constants.db.table.transaction} (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS booking_customer_email_idx ON ${constants.db.table.booking}(customer_email);
-CREATE INDEX IF NOT EXISTS booking_pickup_datetime_idx ON ${constants.db.table.booking}(pickup_datetime);
+CREATE INDEX IF NOT EXISTS booking_customer_email_idx ON ${DB_TABLE.booking}(customer_email);
+CREATE INDEX IF NOT EXISTS booking_pickup_datetime_idx ON ${DB_TABLE.booking}(pickup_datetime);
 
-CREATE INDEX IF NOT EXISTS transactions_request_id_idx ON ${constants.db.table.transaction}(request_id);
+CREATE INDEX IF NOT EXISTS transactions_request_id_idx ON ${DB_TABLE.transaction}(request_id);
 
-CREATE INDEX IF NOT EXISTS vehicle_is_active_idx ON ${constants.db.table.vehicle}(is_active);
+CREATE INDEX IF NOT EXISTS vehicle_is_active_idx ON ${DB_TABLE.vehicle}(is_active);
 `;

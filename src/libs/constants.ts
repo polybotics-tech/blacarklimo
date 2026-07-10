@@ -28,6 +28,9 @@ const constants = {
     analytics: {
       summary: () => `analytics_summary:all`,
     },
+    admin: {
+      push_token: () => `admin_push_token:all`,
+    },
     payment: {
       request: (id: string) => `payment_request:${id}`,
       requests: (bookingId?: string, status?: string) =>
@@ -51,6 +54,7 @@ const constants = {
     defaultPage: 1,
     table: {
       admin: "admins",
+      adminPushToken: "admin_push_tokens",
       discount: "discounts",
       vehicle: "vehicles",
       booking: "bookings",

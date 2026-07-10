@@ -6,6 +6,7 @@ import {
   countAllBookingOrders,
   createBookingOrder,
   createPaymentRequest,
+  getMultipleAdminPushTokens,
   getMultipleBookingOrders,
 } from "@/src/utils/db";
 import {
@@ -19,6 +20,7 @@ import {
 } from "@/src/utils/db/types";
 import { NextResponse } from "next/server";
 import { generatePaginationMeta } from "@/src/utils/generator";
+import { sendAdminPushNotification } from "@/src/services/mailer";
 
 export async function POST(request: Request) {
   try {
@@ -59,6 +61,21 @@ export async function POST(request: Request) {
       description: `Booking Reservation for ${order.booking.fullname} (${order.booking.vehicle?.name})`,
       type: "booking",
     });
+
+    //--send push notification to admins
+    const adminPushTokens = await getMultipleAdminPushTokens();
+    if (adminPushTokens.length) {
+      adminPushTokens.forEach((admin) =>
+        sendAdminPushNotification(admin.expoPushToken, {
+          title: `New Booking Request`,
+          body: `${paymentRequest.description}`,
+          data: {
+            screen: "booking",
+            id: paymentRequest.bookingId,
+          },
+        }),
+      );
+    }
 
     return NextResponse.json({
       success: true,

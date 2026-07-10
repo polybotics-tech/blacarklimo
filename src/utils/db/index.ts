@@ -10,6 +10,8 @@ import {
 import { BookingFormType } from "@/src/libs/types";
 import { DATABASE_URL, dbConfig, schemaSql } from "@/src/utils/db/config";
 import {
+  AdminPushTokenRecordType,
+  AdminPushTokenRow,
   AdminRecordType,
   AdminRow,
   AnalyticsRecordType,
@@ -94,7 +96,7 @@ export async function createAdmin(
 ) {
   await ensureDatabaseSchema();
 
-  const result = await query(
+  const result = await query<AdminRow>(
     `
     INSERT INTO ${DB_TABLE.admin} (
       email,
@@ -108,7 +110,7 @@ export async function createAdmin(
     [email, passwordHash, fullname, role],
   );
 
-  return result.rows[0];
+  return mapAdmin(result.rows[0]);
 }
 
 export async function findAdminByEmail(email: string) {
@@ -153,6 +155,112 @@ export async function findAdminById(id: string) {
     console.log(error instanceof Error ? error.message : "get admin error");
     return null;
   }
+}
+
+//---------ADMIN PUSH TOKEN
+function mapAdminPushToken(row: AdminPushTokenRow): AdminPushTokenRecordType {
+  return {
+    id: row.id,
+    adminId: row.admin_id,
+    expoPushToken: row.expo_push_token,
+    createdAt: row.created_at.toISOString(),
+  };
+}
+
+function mapMultipleAdminPushTokens(
+  rows: AdminPushTokenRow[],
+): AdminPushTokenRecordType[] {
+  return rows.map(mapAdminPushToken);
+}
+
+export async function createAdminPushToken(
+  adminId: string,
+  expoPushToken: string,
+) {
+  await ensureDatabaseSchema();
+
+  const result = await query<AdminPushTokenRow>(
+    `
+    INSERT INTO ${DB_TABLE.adminPushToken} (
+      admin_id,
+      expo_push_token,
+    )
+    VALUES ($1, $2)
+    RETURNING *
+    `,
+    [adminId, expoPushToken],
+  );
+
+  return mapAdminPushToken(result.rows[0]);
+}
+
+export async function getAdminPushTokenByAdminId(adminId: string) {
+  try {
+    await ensureDatabaseSchema();
+
+    const result = await query<Parameters<typeof mapAdminPushToken>[0]>(
+      `
+      SELECT *
+      FROM ${DB_TABLE.adminPushToken}
+      WHERE admin_id = $1
+      LIMIT 1
+      `,
+      [adminId],
+    );
+
+    return result.rows[0] ? mapAdminPushToken(result.rows[0]) : null;
+  } catch (error) {
+    console.log(
+      error instanceof Error ? error.message : "get admin push token error",
+    );
+    return null;
+  }
+}
+
+export async function getMultipleAdminPushTokens() {
+  try {
+    //check if in cache before fetching from db
+    const cacheKey = constants.cacheKeyTemp.admin.push_token();
+
+    const cached = await RedisCache.fetch(cacheKey);
+    if (cached) {
+      return cached as AdminPushTokenRecordType[];
+    }
+    ///////////////////
+
+    await ensureDatabaseSchema();
+
+    const result = await query<AdminPushTokenRow>(
+      `SELECT * FROM ${DB_TABLE.adminPushToken} ORDER BY created_at DESC`,
+      [],
+    );
+
+    const data = result.rows.length
+      ? mapMultipleAdminPushTokens(result.rows)
+      : [];
+
+    await RedisCache.save(cacheKey, data);
+    return data;
+  } catch (error) {
+    console.log(
+      error instanceof Error ? error.message : "get admin push token error",
+    );
+    return [];
+  }
+}
+
+export async function updateAdminPushToken(
+  adminId: string,
+  expoPushToken: string,
+) {
+  await query(
+    `
+    UPDATE ${DB_TABLE.paymentRequest}
+    SET expo_push_token = $1
+    WHERE admin_id = $2
+    `,
+    [expoPushToken, adminId],
+  );
 }
 
 //----------ANALYTICS

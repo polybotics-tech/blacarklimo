@@ -231,6 +231,24 @@ export type AdminRecordType = {
   createdAt: string;
 };
 
+export type AdminPushTokenRow = {
+  id: string;
+
+  admin_id: string;
+  expo_push_token: string;
+
+  created_at: Date;
+};
+
+export type AdminPushTokenRecordType = {
+  id: string;
+
+  adminId: string;
+  expoPushToken: string;
+
+  createdAt: string;
+};
+
 export type AnalyticsRow = {
   monthly_earnings: string;
   annual_earnings: string;
