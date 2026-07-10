@@ -2,6 +2,7 @@
 
 import constants from "@/src/libs/constants";
 import { ArrowRight, ChevronLeft, Menu, Phone, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
@@ -27,7 +28,14 @@ const DefaultNavigation = () => {
         <div className="w-full max-w-5xl mx-auto py-4 md:py-2 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
           <Link href={"/"}>
             <div className="flex items-center gap-1">
-              <div className="w-5 h-5 rounded-sm bg-pri-gold"></div>
+              <div className="w-5 h-5 rounded-sm overflow-hidden">
+                <Image
+                  alt="Blacarklimo Logo"
+                  src={"/assets/images/logo.png"}
+                  width={20}
+                  height={20}
+                />
+              </div>
               <h4>
                 Blacark<span className="text-sec-gold">limo</span>
               </h4>

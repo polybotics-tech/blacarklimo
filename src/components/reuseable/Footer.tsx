@@ -4,6 +4,7 @@ import constants from "@/src/libs/constants";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import toast from "react-hot-toast";
 
 const DefaultFooter = () => {
   //--states
@@ -19,7 +20,17 @@ const DefaultFooter = () => {
   ];
 
   //--functions
-  function subscribeToNewsletter() {}
+  function subscribeToNewsletter() {
+    if (!email) return;
+
+    if (!email.trim().includes("@")) {
+      toast.error("Please enter an email address");
+      return;
+    }
+
+    setEmail("");
+    toast.success("Subscribed to Newsletter");
+  }
 
   return (
     <footer className="px-4 sm:px-6 lg:px-8 pt-4 max-md:pb-16 sm:pt-6 lg:pt-8 pb-4 bg-sec-bg">
@@ -68,7 +79,7 @@ const DefaultFooter = () => {
             </div>
 
             {/**SUBSCRIBE TO NEWSLETTER */}
-            <form className="w-full p-2 pl-4 flex items-center gap-4 rounded-full bg-pri-bg">
+            <div className="w-full p-2 pl-4 flex items-center gap-4 rounded-full bg-pri-bg">
               <input
                 type="text"
                 placeholder="Your email address"
@@ -82,12 +93,14 @@ const DefaultFooter = () => {
               <button
                 type="submit"
                 className="h-8 px-4 rounded-full bg-pri-text"
+                onClick={subscribeToNewsletter}
+                disabled={!email}
               >
                 <p className="text-pri-bg text-[10px] font-semibold">
                   Subscribe
                 </p>
               </button>
-            </form>
+            </div>
           </div>
         </div>
 
