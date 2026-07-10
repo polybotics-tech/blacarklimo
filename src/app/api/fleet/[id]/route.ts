@@ -125,12 +125,12 @@ export async function PUT(
       createdAt,
       updatedAt,
       uri,
-      ...updatedableInfo
+      ...updatableInfo
     } = vehicle;
     const updateVehicleInfo: Omit<
       VehicleRecordType,
       "id" | "createdAt" | "updatedAt" | "uri"
-    > = { ...updatedableInfo, ...body };
+    > = { ...updatableInfo, ...body };
 
     const updatedVehicle: VehicleRecordType | null = await updateVehicle(
       id,
@@ -146,6 +146,7 @@ export async function PUT(
 
     await RedisCache.delete(
       [
+        constants.cacheKeyTemp.vehicles.order(id),
         constants.cacheKeyTemp.vehicles.orders(false),
         constants.cacheKeyTemp.vehicles.orders(true),
         constants.cacheKeyTemp.vehicles.count_orders(),
@@ -161,7 +162,7 @@ export async function PUT(
       },
     });
   } catch (error) {
-    console.error("Update vehicle error:", error);
+    //console.error("Update vehicle error:", error);
 
     return NextResponse.json(
       {

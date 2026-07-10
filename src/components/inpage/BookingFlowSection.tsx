@@ -19,7 +19,7 @@ import {
   ToggleSwitch,
 } from "@/src/components/reuseable/FormComponents";
 import { ncPopularCounties } from "@/src/libs/places";
-import { ArrowLeftRight, Plus } from "lucide-react";
+import { ArrowLeftRight, CarFront, Plus } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/src/hooks/useStore";
 import { SummaryLocationCard } from "../reuseable/CardComponent";
 import constants from "@/src/libs/constants";
@@ -44,24 +44,53 @@ import {
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { __Action_updateBookingForm } from "@/src/utils/store/slice/bookingSlice";
+import { VehicleRecordType } from "@/src/utils/db/types";
 
 const RideSection = ({
   form,
   onFormChange,
   searchParam,
 }: DefaultSectionProps) => {
+  //--states
+  const [fleet, setFleet] = React.useState<VehicleRecordType[]>([]);
+  const [isFetching, setIsFetching] = React.useState(true);
+
   //--variables
   const maxPassengers = Boolean(form.vehicle)
     ? form.vehicle?.numOfPassenger
     : 14;
 
   //--functions
-  function autoFillVehicle() {
+  async function fetchAllVehicles() {
+    setIsFetching(true);
+
+    try {
+      const response = await fetch(`/api/fleet/?activeOnly=true`);
+      const data = await response.json();
+
+      if (!response.ok || !data?.success) {
+        toast.error(data?.message || "Something went wrong");
+        return;
+      }
+
+      setFleet(data?.data?.vehicles);
+      return;
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error?.message : "Something went wrong",
+      );
+      return;
+    } finally {
+      setIsFetching(false);
+    }
+  }
+
+  async function autoFillVehicle() {
     const vehicle_id = searchParam?.get("vehicle_id");
 
     if (!vehicle_id) return;
 
-    const targetVehicle: VehicleType = popularVehicles.filter(
+    const targetVehicle: VehicleType = fleet.filter(
       (car) => car.id === vehicle_id,
     )[0];
 
@@ -73,58 +102,112 @@ const RideSection = ({
   //--effects
   React.useEffect(() => {
     autoFillVehicle();
+  }, [fleet]);
+
+  React.useEffect(() => {
+    fetchAllVehicles();
   }, []);
 
   return (
     <div className="space-y-4">
       <div className="w-full p-4 bg-pri-bg flex gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-sec-text scrollbar-track-transparent">
-        {popularVehicles.map((car, idx) => {
-          const pricePreview =
-            form.tripChoice === "hourly"
-              ? `$${car.pricePerHour}/hour`
-              : `$${car.pricePerMile}/mile`;
+        <>
+          {isFetching ? (
+            <div className="w-full h-43 rounded-2xl bg-card-bg centralize gap-4 flex-col">
+              <div className="w-8 h-8 rounded-full border-2 border-t-0 border-l-0 border-sec-text animate-spin" />
 
-          const isSelected = car.id === form.vehicle?.id;
-
-          return (
-            <div
-              key={idx}
-              onClick={() => onFormChange("vehicle", car)}
-              className={`relative w-fit min-w-fit p-4 space-y-1 cursor-pointer rounded-lg bg-card-bg ${isSelected && "card-glow"}`}
-            >
-              <div className="w-full flex flex-col gap-0.5">
-                <span
-                  className={`text-[10px] font-sora font-semibold ${isSelected ? "text-sec-gold" : "text-pri-text"}`}
-                >
-                  {car.name}
-                </span>
-                <span className="text-[9px] font-poppins font-light text-sec-text">
-                  {car.numOfPassenger} passengers | {car.numOfLuggage} luggages
-                </span>
-              </div>
-
-              <div className="overflow-hidden relative w-45 h-25.25">
-                <Image
-                  src={car.uri}
-                  alt="vehicle-image"
-                  width={180}
-                  height={101}
-                  sizes="1920px"
-                  loading="eager"
-                  className="object-cover"
-                />
-              </div>
-
-              <div className="absolute bottom-2 right-2 w-fit p-1 rounded-sm bg-pri-bg">
-                <p
-                  className={`text-[9px] font-sora font-medium ${isSelected ? "text-sec-gold" : "text-sec-text"}`}
-                >
-                  {pricePreview}
+              <div>
+                <h4 className="text-center text-sec-text">
+                  Fetching Our Premium Vehicles
+                </h4>
+                <p className="text-center text-dim-text">
+                  Just hold on a minute
                 </p>
               </div>
             </div>
-          );
-        })}
+          ) : (
+            <>
+              {!Boolean(fleet.length) ? (
+                <div className="w-full h-43 rounded-2xl bg-card-bg centralize gap-4 flex-col">
+                  <CarFront
+                    size={32}
+                    strokeWidth={1.3}
+                    className="text-sec-text"
+                  />
+
+                  <div>
+                    <h4 className="text-center text-sec-text">
+                      No Vehicles Available
+                    </h4>
+                    <p className="text-center text-dim-text">
+                      Please try again later.
+                    </p>
+                  </div>
+
+                  <button
+                    className="w-full max-w-60 h-10 mt-4 rounded-full bg-pri-text centralize"
+                    onClick={fetchAllVehicles}
+                  >
+                    <p className="text-pri-bg font-medium">Reload</p>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {fleet.map((car, idx) => {
+                    const pricePreview =
+                      form.tripChoice === "hourly"
+                        ? `$${car.pricePerHour}/hour`
+                        : `$${car.pricePerMile}/mile`;
+
+                    const isSelected = car.id === form.vehicle?.id;
+
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => onFormChange("vehicle", car)}
+                        className={`relative w-fit min-w-fit p-4 space-y-1 cursor-pointer rounded-lg bg-card-bg ${isSelected && "card-glow"}`}
+                      >
+                        <div className="w-full flex flex-col gap-0.5">
+                          <span
+                            className={`text-[10px] font-sora font-semibold ${isSelected ? "text-sec-gold" : "text-pri-text"}`}
+                          >
+                            {car.name}
+                          </span>
+                          <span className="text-[9px] font-poppins font-light text-sec-text">
+                            {car.numOfPassenger} passengers | {car.numOfLuggage}{" "}
+                            luggages
+                          </span>
+                        </div>
+
+                        <div className="overflow-hidden relative w-45 h-25.25">
+                          {Boolean(car.uri) && (
+                            <Image
+                              src={car.uri}
+                              alt="vehicle-image"
+                              width={180}
+                              height={101}
+                              sizes="1920px"
+                              loading="eager"
+                              className="object-cover"
+                            />
+                          )}
+                        </div>
+
+                        <div className="absolute bottom-2 right-2 w-fit p-1 rounded-sm bg-pri-bg">
+                          <p
+                            className={`text-[9px] font-sora font-medium ${isSelected ? "text-sec-gold" : "text-sec-text"}`}
+                          >
+                            {pricePreview}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+            </>
+          )}
+        </>
       </div>
 
       <div className="w-full flex items-center justify-between gap-2">

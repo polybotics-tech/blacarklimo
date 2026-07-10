@@ -8,6 +8,7 @@ import { VehicleRecordType } from "@/src/utils/db/types";
 import { NextRequest, NextResponse } from "next/server";
 import constants from "@/src/libs/constants";
 import { validateAccessToken } from "@/src/services/admin";
+import { RedisCache } from "@/src/utils/cache";
 
 export async function PUT(
   request: NextRequest,
@@ -115,6 +116,16 @@ export async function PUT(
 
       await fs.unlink(oldPath);
     }
+
+    await RedisCache.delete(
+      [
+        constants.cacheKeyTemp.vehicles.order(id),
+        constants.cacheKeyTemp.vehicles.orders(false),
+        constants.cacheKeyTemp.vehicles.orders(true),
+        constants.cacheKeyTemp.vehicles.count_orders(),
+      ],
+      true,
+    );
 
     return NextResponse.json({
       success: true,

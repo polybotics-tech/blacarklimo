@@ -38,7 +38,8 @@ const constants = {
     },
     vehicles: {
       order: (id: string) => `vehicle_order:${id}`,
-      orders: (activeOnly: boolean) => `vehicle_orders:${activeOnly}`,
+      orders: (activeOnly: boolean) =>
+        `vehicle_orders:${activeOnly ? "active" : "inactive"}`,
       count_orders: () => `vehicle_count_orders:all`,
     },
   },
@@ -65,7 +66,7 @@ const constants = {
 
   token: {
     allowedBearers: ["Bearer"],
-    expiresIn: 60 * 45, // 45 minutes
+    expiresIn: 60 * 60, // 60 minutes
   },
 
   photoUpload: {

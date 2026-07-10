@@ -92,6 +92,9 @@ export async function PUT(request: NextRequest) {
     }
 
     const vehicles = await getMultipleVehicles();
+    vehicles.forEach((vh) => {
+      RedisCache.delete(constants.cacheKeyTemp.vehicles.order(vh.id));
+    });
     await RedisCache.delete(
       [
         constants.cacheKeyTemp.vehicles.orders(false),
@@ -131,7 +134,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ success: true, data: { vehicles } });
   } catch (error) {
-    console.error("Get vehicles error:", error);
+    //console.error("Get vehicles error:", error);
 
     return NextResponse.json(
       {

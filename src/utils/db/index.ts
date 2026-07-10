@@ -1237,7 +1237,7 @@ export async function updateVehicleSortOrder(
     await ensureDatabaseSchema();
 
     const values = orders
-      .map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`)
+      .map((_, i) => `($${i * 2 + 1}::uuid, $${i * 2 + 2}::int)`)
       .join(",");
 
     const params = orders.flatMap((o) => [o.id, o.newOrder]);
@@ -1249,13 +1249,16 @@ export async function updateVehicleSortOrder(
       FROM (
           VALUES ${values}
       ) AS u(id, sort_order)
-      WHERE v.id = u.id;
+      WHERE v.id = u.id::uuid;
       `,
       params,
     );
 
     return true;
   } catch (error) {
+    console.log(
+      error instanceof Error ? error.message : "update vehicle order error",
+    );
     return false;
   }
 }
