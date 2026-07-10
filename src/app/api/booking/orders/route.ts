@@ -58,7 +58,7 @@ export async function POST(request: Request) {
       bookingId: order.id,
       amount: order.charges.total,
       currency: order.currency,
-      description: `Booking Reservation for ${order.booking.fullname} (${order.booking.vehicle?.name})`,
+      description: `Booking Reservation for ${order.booking.vehicle?.name} (by ${order.booking.fullname})`,
       type: "booking",
     });
 

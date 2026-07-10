@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     const pushToken = body?.pushToken;
 
-    if (pushToken) {
+    if (!pushToken) {
       return NextResponse.json(
         { success: false, message: "Push Notification Token is missing." },
         { status: 400 },

@@ -183,7 +183,7 @@ export async function createAdminPushToken(
     `
     INSERT INTO ${DB_TABLE.adminPushToken} (
       admin_id,
-      expo_push_token,
+      expo_push_token
     )
     VALUES ($1, $2)
     RETURNING *
