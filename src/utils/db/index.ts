@@ -255,7 +255,7 @@ export async function updateAdminPushToken(
 ) {
   await query(
     `
-    UPDATE ${DB_TABLE.paymentRequest}
+    UPDATE ${DB_TABLE.adminPushToken}
     SET expo_push_token = $1
     WHERE admin_id = $2
     `,
