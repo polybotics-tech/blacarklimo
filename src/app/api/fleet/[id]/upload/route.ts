@@ -55,6 +55,8 @@ export async function PUT(
     const buffer = await convertFileToBuffer(file as File);
     const resizedBuffer = await resizeImageSizeByBuffer(buffer);
 
+    console.log("resizedBuffer.length: ", resizedBuffer.length);
+
     //--UPLOAD IMAGE BUFFER TO STORAGE
     const directory = "vehicles";
     const { error: uploadError, uri: uploadUri } =
