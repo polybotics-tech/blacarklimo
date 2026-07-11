@@ -31,8 +31,6 @@ export async function PUT(
 
     const file = formData.get("image");
 
-    console.log("file request: ", file);
-
     const { error: fileValidationError } =
       await validateUploadedFileAsPhoto(file);
     if (fileValidationError) {

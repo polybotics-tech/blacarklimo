@@ -66,10 +66,15 @@ export async function uploadImageBufferToStorage(
   const filename =
     directory + "/" + `${Date.now()}-${randomUUID()}` + extension;
 
+  //--FORCE CONVERT BUFFER TO FILE
+  const blob = new Blob([buffer], {
+    type: "image/webp",
+  });
+
   //--UPLOAD TO SUPABASE
   const { error: uploadError } = await supabase.storage
     .from(bucket!)
-    .upload(filename, buffer, {
+    .upload(filename, blob, {
       contentType: "image/webp",
       upsert: false,
     });
