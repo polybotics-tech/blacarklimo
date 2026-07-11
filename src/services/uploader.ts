@@ -87,20 +87,6 @@ export async function uploadImageBufferToStorage(
     };
   }
 
-  /////////////////////
-  console.log("runtime:", process.env.NEXT_RUNTIME);
-
-  const { data: fileData } = await supabase.storage
-    .from(bucket!)
-    .download(filename);
-
-  console.log("data size (from download): ", fileData?.size);
-
-  const arrayBuffer = await fileData!.arrayBuffer();
-
-  console.log("arrayBuffer.byteLength: ", arrayBuffer.byteLength);
-  ////////////////////
-
   //--GET PUBLIC IMAGE URI
   const { data } = supabase.storage.from(bucket!).getPublicUrl(filename);
 
