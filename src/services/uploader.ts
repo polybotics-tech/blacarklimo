@@ -83,6 +83,8 @@ export async function uploadImageBufferToStorage(
   }
 
   /////////////////////
+  console.log("runtime:", process.env.NEXT_RUNTIME);
+
   const { data: fileData } = await supabase.storage
     .from(bucket!)
     .download(filename);
