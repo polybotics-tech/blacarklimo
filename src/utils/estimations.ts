@@ -113,7 +113,7 @@ export function roundToCurrency(value: number) {
 }
 
 export function formatCurrency(value: number) {
-  return roundToCurrency(value).toLocaleString("en-US", {
+  return roundToCurrency(Number(value)).toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });

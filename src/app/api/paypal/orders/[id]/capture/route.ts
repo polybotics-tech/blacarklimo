@@ -1,16 +1,12 @@
 import constants from "@/src/libs/constants";
 import { PayPalPaymentMethod } from "@/src/libs/types";
-import {
-  sendAdminBookingEmailNotification,
-  sendAdminPushNotification,
-} from "@/src/services/mailer";
+import Jobs from "@/src/services/jobs";
 import { capturePayPalOrder } from "@/src/services/paypal";
 import { RedisCache } from "@/src/utils/cache";
 import {
   createTransaction,
-  getBookingOrder,
-  getMultipleAdminPushTokens,
   getPaymentRequestWithBooking,
+  getTransactionByPaypalOrderId,
   markBookingPaid,
   updatePaymentRequestStatus,
 } from "@/src/utils/db";
@@ -68,9 +64,9 @@ export async function POST(
       );
     }
 
+    //--CONFIRM PAYMENT REQUEST
     const paymentRequest: PaymentRequestWithBookingRecordType | null =
       await getPaymentRequestWithBooking(body.paymentId);
-
     if (!paymentRequest) {
       return NextResponse.json(
         { success: false, message: "Payment request not found." },
@@ -78,8 +74,8 @@ export async function POST(
       );
     }
 
+    //--CONFIRM ORDER
     const order: BookingOrderRecordType | null = paymentRequest.order;
-
     if (!order) {
       return NextResponse.json(
         { success: false, message: "Booking order not found." },
@@ -87,6 +83,19 @@ export async function POST(
       );
     }
 
+    //--CHECK IF TRANSACTION HAS ALREADY BEEN CAPTURED
+    const existing = await getTransactionByPaypalOrderId(paypalOrderId);
+    if (existing && existing.status === "COMPLETED") {
+      return NextResponse.json({
+        success: true,
+        data: {
+          transactionId: existing.id,
+          transaction: existing,
+        },
+      });
+    }
+
+    //--CAPTURE TRANSACTION FROM PAYPAL API
     const paypalResponse = await capturePayPalOrder(paypalOrderId);
     const capture = getCaptureDetails(paypalResponse);
     const transaction = await createTransaction({
@@ -120,22 +129,15 @@ export async function POST(
         true,
       );
 
-      sendAdminBookingEmailNotification(order.id);
-
-      //--send push notification to admins
-      const adminPushTokens = await getMultipleAdminPushTokens();
-      if (adminPushTokens.length) {
-        adminPushTokens.forEach((admin) =>
-          sendAdminPushNotification(admin.expoPushToken, {
-            title: `Payment Transaction Successful`,
-            body: `${paymentRequest.description}`,
-            data: {
-              screen: "transaction",
-              id: transaction.id,
-            },
-          }),
-        );
-      }
+      //--send notification to admins
+      Jobs.notifyAdmin({
+        title: `Payment Transaction Successful`,
+        body: `${paymentRequest.description}`,
+        data: {
+          screen: "transaction",
+          id: transaction.id,
+        },
+      });
     } else {
       await updatePaymentRequestStatus(paymentRequest.id, "cancelled");
     }

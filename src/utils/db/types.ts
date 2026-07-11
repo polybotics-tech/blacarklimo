@@ -59,6 +59,7 @@ export type PaymentRequestRow = {
   currency: string;
 
   created_at: Date;
+  updated_at: Date;
 };
 
 export type PaymentRequestRecordType = {
@@ -74,6 +75,7 @@ export type PaymentRequestRecordType = {
   currency: string;
 
   createdAt: string;
+  updatedAt: string;
 };
 
 //-------------------------

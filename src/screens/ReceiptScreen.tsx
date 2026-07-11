@@ -1,7 +1,8 @@
 "use client";
 
 import type {
-  BookingOrderRecordType,
+  BookingOrderWithPaymentsRecordType,
+  PaymentRequestRecordType,
   PaymentRequestWithBookingRecordType,
   TransactionRecordType,
 } from "@/src/utils/db/types";
@@ -17,7 +18,11 @@ import { useReactToPrint } from "react-to-print";
 import { SummaryLocationCard } from "../components/reuseable/CardComponent";
 import constants from "../libs/constants";
 import { LocationType } from "../libs/types";
-import { formatDateFromISO, formatTimeFromISO } from "../utils/datetime";
+import {
+  formatDateFromISO,
+  formatDateTimeFromISO,
+  formatTimeFromISO,
+} from "../utils/datetime";
 import toast from "react-hot-toast";
 
 export default function ReceiptScreen({
@@ -29,7 +34,7 @@ export default function ReceiptScreen({
 }) {
   //--states
   const [bookingOrder, setBookingOrder] =
-    React.useState<BookingOrderRecordType | null>(null);
+    React.useState<BookingOrderWithPaymentsRecordType | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isPrinting, setIsPrinting] = React.useState(false);
   const [printError, setPrintError] = React.useState("");
@@ -239,8 +244,7 @@ export default function ReceiptScreen({
               <div className="absolute top[-9999px] -left-2499.75">
                 <PrintableReceiptComponent
                   ref={componentRef}
-                  order={bookingOrder as BookingOrderRecordType}
-                  transaction={transaction as TransactionRecordType}
+                  order={bookingOrder as BookingOrderWithPaymentsRecordType}
                 />
               </div>
             )}
@@ -258,19 +262,13 @@ export default function ReceiptScreen({
 const PrintableReceiptComponent = React.forwardRef<
   HTMLDivElement,
   PrintableReceiptComponentProps
->(({ order, transaction }: PrintableReceiptComponentProps, ref) => {
+>(({ order }: PrintableReceiptComponentProps, ref) => {
   //--variables
   const booking = order.booking;
   const charges = order.charges;
-
-  const subtotal = charges.subtotal;
-  const discount = charges.discount;
-  const discountPercentage = charges.discountPercentage;
-  const tax = charges.tax;
-  const taxPercentage = charges.taxPercentage;
-  const gratuity = charges.gratuity;
-  const total = charges.total;
   const estimatedDistance = charges.estimatedDistance;
+
+  const paymentRequests = order?.paymentRequests;
 
   return (
     <div
@@ -285,104 +283,61 @@ const PrintableReceiptComponent = React.forwardRef<
       </div>
 
       <div className="w-full flex flex-col flex-1 gap-4 px-4 pb-4 sm:px-6 sm:pb-6 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-sec-text">
-        {/**SUMMARY */}
-        <ul className="w-full p-4 rounded-2xl bg-sec-bg space-y-2">
-          {/**TRANSACTION */}
-          <li className="w-full flex items-center justify-between gap-4">
-            <p className="text-sec-text">Transaction ID</p>
+        {/**PAYMENT REQUESTS */}
+        {Boolean(paymentRequests && paymentRequests?.length) && (
+          <div className="w-full gap-6">
+            <div className="p-4 bg-sec-bg rounded-2xl">
+              <h2 className="text-pri-text">Payment History</h2>
+            </div>
 
-            <p className="text-pri-text font-medium uppercase">
-              {transaction.id.toUpperCase()}
-            </p>
-          </li>
+            {paymentRequests?.map((request) => {
+              const prTitleOpt: Record<
+                PaymentRequestRecordType["type"],
+                string
+              > = {
+                booking: "Main Booking",
+                overtime: "Overtime Payment",
+              };
+              const title = prTitleOpt[request.type];
+              const currency =
+                request.currency === "USD" ? "$" : request.currency;
+              const amount = formatCurrency(request.amount);
+              const datetime = formatDateTimeFromISO(request.updatedAt);
+              const desc = request.description;
 
-          <li className="w-full flex items-center justify-between gap-4">
-            <p className="text-sec-text">Status</p>
+              const isPaid = request.status === "paid";
+              const isCancelled = request.status === "cancelled";
 
-            <p className="text-pri-text font-medium uppercase">
-              {transaction.status}
-            </p>
-          </li>
+              return (
+                <div
+                  key={request.id}
+                  className="w-full p-4 g-2 rounded-2xl bg-sec-bg"
+                >
+                  <div className="w-full flex-row items-center justify-between gap-6">
+                    <h4>{title}</h4>
+                    <h3>
+                      {currency} {amount}
+                    </h3>
+                  </div>
 
-          <li className="w-full flex items-center justify-between gap-4">
-            <p className="text-sec-text">Payment Method</p>
+                  <div className="w-full flex-row items-center justify-between gap-6">
+                    <p>{datetime}</p>
 
-            <p className="text-pri-text font-medium uppercase">
-              {transaction.paymentMethod}
-            </p>
-          </li>
+                    <p
+                      className={`text-[10px] ${isPaid ? "text-success" : isCancelled ? "text-red-400" : "text-sec-gold"}`}
+                    >
+                      {request.status?.toUpperCase()}
+                    </p>
+                  </div>
 
-          <li className="w-full flex items-center justify-between gap-4">
-            <p className="text-sec-text">PayPal Order ID</p>
+                  <div className="w-full h-0 border-t border-dashed border-t-dim-text" />
 
-            <p className="text-pri-text font-medium uppercase">
-              {transaction.paypalOrderId}
-            </p>
-          </li>
-
-          {/**BOOKING ORDER */}
-          <li className="w-full flex items-center justify-between gap-4">
-            <p className="text-sec-text">Trip Choice</p>
-
-            <p className="text-pri-text font-medium uppercase">
-              {booking.tripChoice}
-            </p>
-          </li>
-
-          <li className="w-full flex items-center justify-between gap-4">
-            <p className="text-sec-text">Subtotal</p>
-
-            <p className="text-pri-text font-medium uppercase">
-              $ {formatCurrency(subtotal)}
-            </p>
-          </li>
-
-          <li className="w-full flex items-center justify-between gap-4">
-            <p className="text-sec-text">
-              Tax{" "}
-              <span className="text-[10px] text-dim-text">
-                ({taxPercentage}%)
-              </span>
-            </p>
-
-            <p className="text-pri-text font-medium uppercase">
-              $ {formatCurrency(tax)}
-            </p>
-          </li>
-
-          {Boolean(discount) && (
-            <li className="w-full flex items-center justify-between gap-4">
-              <p className="text-sec-text">
-                Discount{" "}
-                <span className="text-[10px] text-dim-text">
-                  ({discountPercentage}%)
-                </span>
-              </p>
-
-              <p className="text-pri-text font-medium uppercase">
-                $ {formatCurrency(discount)}
-              </p>
-            </li>
-          )}
-
-          <li className="w-full flex items-center justify-between gap-4">
-            <p className="text-sec-text">
-              Gratuity <span className="text-[10px] text-dim-text">(Tip)</span>
-            </p>
-
-            <p className="text-pri-text font-medium uppercase">
-              $ {formatCurrency(gratuity)}
-            </p>
-          </li>
-
-          <li className="w-full flex items-center justify-between gap-4 pt-2 border-t border-dashed border-dim-text">
-            <h4 className="font-medium text-sec-text">Total</h4>
-
-            <h4 className="font-medium text-sec-gold">
-              $ {formatCurrency(total)}
-            </h4>
-          </li>
-        </ul>
+                  <p>{desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         <div className="w-full h-0 border-t border-dashed border-t-dim-text" />
 
@@ -517,6 +472,5 @@ const PrintableReceiptComponent = React.forwardRef<
 
 PrintableReceiptComponent.displayName = "PrintableReceiptComponent";
 interface PrintableReceiptComponentProps {
-  order: BookingOrderRecordType;
-  transaction: TransactionRecordType;
+  order: BookingOrderWithPaymentsRecordType;
 }

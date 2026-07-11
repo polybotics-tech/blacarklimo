@@ -263,6 +263,26 @@ export async function updateAdminPushToken(
   );
 }
 
+export async function deleteAdminPushToken(pushToken: string) {
+  try {
+    await ensureDatabaseSchema();
+
+    const result = await query<DiscountRow>(
+      `
+      DELETE FROM ${DB_TABLE.adminPushToken} WHERE expo_push_token = $1
+      `,
+      [pushToken],
+    );
+
+    return true;
+  } catch (error) {
+    console.log(
+      error instanceof Error ? error.message : "delete push token error",
+    );
+    return false;
+  }
+}
+
 //----------ANALYTICS
 function mapAnalytics(row: AnalyticsRow): AnalyticsRecordType {
   return {
@@ -727,6 +747,7 @@ function mapPaymentRequest(row: PaymentRequestRow): PaymentRequestRecordType {
     amount: row.amount,
     currency: row.currency,
     createdAt: row.created_at.toISOString(),
+    updatedAt: row.updated_at.toISOString(),
   };
 }
 
@@ -880,7 +901,7 @@ export async function deletePaymentRequestByBookingId(bookingId: string) {
 
     const result = await query<PaymentRequestRow>(
       `
-      DELETE FROM ${DB_TABLE.paymentRequest} WHERE booking_id = $1
+      DELETE FROM ${DB_TABLE.paymentRequest} WHERE booking_id = $1 
       `,
       [bookingId],
     );
@@ -1020,6 +1041,36 @@ export async function getTransaction(transactionId: string) {
     const result = await query<Parameters<typeof mapTransaction>[0]>(
       `SELECT * FROM ${DB_TABLE.transaction} WHERE id = $1 LIMIT 1`,
       [transactionId],
+    );
+
+    const data = result.rows[0] ? mapTransaction(result.rows[0]) : null;
+
+    await RedisCache.save(cacheKey, data);
+    return data;
+  } catch (error) {
+    console.log(
+      error instanceof Error ? error.message : "get transaction error",
+    );
+    return null;
+  }
+}
+
+export async function getTransactionByPaypalOrderId(paypalOrderId: string) {
+  try {
+    //check if in cache before fetching from db
+    const cacheKey = constants.cacheKeyTemp.transactions.order(paypalOrderId);
+
+    const cached = await RedisCache.fetch(cacheKey);
+    if (cached) {
+      return cached as TransactionRecordType;
+    }
+    ///////////////////
+
+    await ensureDatabaseSchema();
+
+    const result = await query<Parameters<typeof mapTransaction>[0]>(
+      `SELECT * FROM ${DB_TABLE.transaction} WHERE paypal_order_id = $1 LIMIT 1`,
+      [paypalOrderId],
     );
 
     const data = result.rows[0] ? mapTransaction(result.rows[0]) : null;

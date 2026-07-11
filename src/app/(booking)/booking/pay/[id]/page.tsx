@@ -1,9 +1,5 @@
 import PaymentScreen from "@/src/screens/PaymentScreen";
-import {
-  getBookingOrder,
-  getPaymentRequest,
-  getPaymentRequestWithBooking,
-} from "@/src/utils/db";
+import { getPaymentRequestWithBooking } from "@/src/utils/db";
 import {
   BookingOrderRecordType,
   PaymentRequestWithBookingRecordType,

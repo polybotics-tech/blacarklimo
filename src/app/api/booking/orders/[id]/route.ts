@@ -28,7 +28,7 @@ export async function GET(
 
     return NextResponse.json({ success: true, data: { order } });
   } catch (error) {
-    //console.error("Get booking order error:", error);
+    console.error("Get booking order error:", error);
 
     return NextResponse.json(
       {

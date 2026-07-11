@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { PushNotificationType } from "@/src/services/types";
 
 const transporter = nodemailer.createTransport({
   //service: "gmail",
@@ -17,14 +18,14 @@ export async function sendAdminBookingEmailNotification(bookingId: string) {
     from: `Blacarklimo <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_USER,
     bcc: process.env.ADMIN_EMAIL,
-    subject: "Blacarklimo | New Paid Booking",
+    subject: "Blacarklimo | Successful Paid Booking",
     html: `
     <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-            <title>Blacarklimo | New Paid Booking</title>
+            <title>Blacarklimo | Successful Paid Booking</title>
 
             <link rel="shortcut icon" href="https://blacarklimo.com/favicon.ico" type="image/x-icon" />
         </head>
@@ -41,35 +42,43 @@ export async function sendAdminBookingEmailNotification(bookingId: string) {
   });
 }
 
-type PushNotificationType = {
-  title: string;
-  body: string;
-  data: {
-    screen: "booking" | "transaction";
-    id: string;
-  };
-};
-export async function sendAdminPushNotification(
-  pushToken: string,
+export async function sendEmailNotificationToAdmins(
   notification: PushNotificationType,
 ) {
-  if (!notification || !pushToken) return;
+  try {
+    const title = notification.title;
+    const body = notification.body;
+    const data = notification.data;
 
-  await fetch("https://exp.host/--/api/v2/push/send", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      to: pushToken,
-      sound: "default",
-      title: notification.title,
-
-      body: notification.body,
-
-      data: notification.data,
-    }),
-  });
+    await transporter.sendMail({
+      from: `Blacarklimo <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
+      bcc: process.env.ADMIN_EMAIL,
+      subject: `Blacarklimo | ${title}`,
+      html: `
+      <!DOCTYPE html>
+          <html>
+          <head>
+              <meta charset="UTF-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+              <title>Blacarklimo | ${title}</title>
+  
+              <link rel="shortcut icon" href="https://blacarklimo.com/favicon.ico" type="image/x-icon" />
+          </head>
+          <body style="background:#020202; padding:20px;">
+            <h2 style="color: #f5f5f5; text-align: center;">This is an important notification from Blacarklimo Chauffeur Services.</h2>
+            <p style="color: #c4c4c4; text-align: center;">${body}</p>
+            <br /><br />
+            <p style="color: #c4c4c4; text-align: center;">${data.screen?.toUpperCase()} ID: <strong>${data.id}</strong></p>
+            <br /><br />
+            <p style="color: #c4c4c4; text-align: center;">You can log in to the admin app to check.</p>
+          </body>
+          </html>
+      `,
+    });
+  } catch (error) {
+    console.log("Notification__Email Err: ", error);
+  }
 }
 
 export async function sendContactMessage(

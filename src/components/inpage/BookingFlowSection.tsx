@@ -44,7 +44,10 @@ import {
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { __Action_updateBookingForm } from "@/src/utils/store/slice/bookingSlice";
-import { VehicleRecordType } from "@/src/utils/db/types";
+import {
+  PaymentRequestRecordType,
+  VehicleRecordType,
+} from "@/src/utils/db/types";
 
 const RideSection = ({
   form,
@@ -640,12 +643,14 @@ const BookingSummarySection = ({ onClose }: BookingSummarySectionProps) => {
         message: "",
       };
 
-      dispatch(
-        __Action_updateBookingForm({
-          pendingOrderId: orderId,
-          ...defaultState,
-        }),
-      );
+      setTimeout(() => {
+        dispatch(
+          __Action_updateBookingForm({
+            pendingOrderId: orderId,
+            ...defaultState,
+          }),
+        );
+      }, 1000);
 
       router.push(`/booking/pay/${paymentId}`);
     } catch (error) {
@@ -1025,10 +1030,13 @@ const PendingBookingSection = ({ onClose }: BookingSummarySectionProps) => {
 
   //--states
   const [booking, setBooking] = React.useState<BookingFormType | undefined>();
-
   const [charges, setCharges] = React.useState<
     BookingChargeSummaryType | undefined
   >();
+  const [paymentRequest, setPaymentRequest] = React.useState<
+    PaymentRequestRecordType | undefined
+  >();
+
   const [isFetching, setIsFetching] = React.useState(true);
   const [isUpdating, setIsUpdating] = React.useState(false);
   const [isDiscarding, setIsDiscarding] = React.useState(false);
@@ -1086,7 +1094,7 @@ const PendingBookingSection = ({ onClose }: BookingSummarySectionProps) => {
         return;
       }
 
-      const order = data.data;
+      const order = data.data?.order;
 
       if (
         order?.paymentStatus === "paid" ||
@@ -1109,11 +1117,12 @@ const PendingBookingSection = ({ onClose }: BookingSummarySectionProps) => {
   }
 
   function proceedToPayment() {
-    if (!pendingOrderId) {
+    if (!paymentRequest?.id) {
       onClose();
       return;
     }
-    router.push(`/booking/pay/${pendingOrderId}`);
+
+    router.push(`/booking/pay/${paymentRequest.id}`);
   }
 
   async function makeChanges() {
@@ -1203,16 +1212,19 @@ const PendingBookingSection = ({ onClose }: BookingSummarySectionProps) => {
         return;
       }
 
-      const bookingRecord = orderRecord.booking;
+      const bookingRecord = orderRecord?.booking;
       setBooking({ ...bookingRecord });
 
-      const chargesRecord = orderRecord.charges;
+      const chargesRecord = orderRecord?.charges;
       setCharges({ ...chargesRecord });
+
+      const mainPaymentRequest = orderRecord?.paymentRequests[0];
+      setPaymentRequest({ ...mainPaymentRequest });
       return;
     }
 
     fetchBooking();
-  }, []);
+  }, [pendingOrderId]);
 
   return (
     <div className="w-full h-full absolute top-0 left-0 z-50 bg-pri-bg/80 centralize p-4">
@@ -1241,7 +1253,7 @@ const PendingBookingSection = ({ onClose }: BookingSummarySectionProps) => {
                   location={booking.pickupLocation as LocationType}
                   markerColor={constants.locationColor.pickup}
                 />
-                {Boolean(booking.extraStops.length) &&
+                {Boolean(booking.extraStops?.length) &&
                   booking.extraStops?.map((stop, idx) => (
                     <SummaryLocationCard
                       key={idx}

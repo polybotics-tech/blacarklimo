@@ -144,13 +144,12 @@ export default function PaymentScreen({
           <p className="text-xs uppercase tracking-wide text-sec-gold">
             Secure Checkout
           </p>
-          <h1 className="text-2xl font-semibold text-pri-text">
-            Complete your reservation
+          <h1 className="text-2xl font-semibold text-pri-text capitalize">
+            {paymentRequest.type === "booking"
+              ? "Complete your reservation"
+              : `${paymentRequest.type} Payment`}
           </h1>
-          <p className="text-sec-text">
-            Reservation #{order.id.slice(0, 8).toUpperCase()} for{" "}
-            {order.booking.fullname}
-          </p>
+          <p className="text-sec-text">{paymentRequest.description}</p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-[1fr_18rem]">
@@ -206,38 +205,83 @@ export default function PaymentScreen({
             )}
           </section>
 
-          <aside className="h-fit space-y-3 rounded-lg bg-card-bg p-4">
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-sec-text">Subtotal</p>
-              <p className="font-medium text-pri-text">
-                $ {formatCurrency(order.charges.subtotal)}
-              </p>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-sec-text">Tax</p>
-              <p className="font-medium text-pri-text">
-                $ {formatCurrency(order.charges.tax)}
-              </p>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-sec-text">Gratuity</p>
-              <p className="font-medium text-pri-text">
-                $ {formatCurrency(order.charges.gratuity)}
-              </p>
-            </div>
-            <div className="border-t border-b border-dashed border-dim-text py-3">
-              <div className="flex items-end justify-between gap-4">
-                <p className="text-base text-pri-text">Total</p>
-                <h2 className="text-xl font-semibold text-sec-gold">
-                  $ {formatCurrency(order.charges.total)}
-                </h2>
+          {paymentRequest.type === "booking" ? (
+            <aside className="h-fit space-y-3 rounded-lg bg-card-bg p-4">
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sec-text">Subtotal</p>
+                <p className="font-medium text-pri-text">
+                  $ {formatCurrency(order.charges.subtotal)}
+                </p>
               </div>
-            </div>
-            <p className="text-[10px] text-sec-text text-center">
-              All payments and transactions are securely processed through Ark
-              Limo, the operating company behind Blacarklimo.
-            </p>
-          </aside>
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sec-text">Tax</p>
+                <p className="font-medium text-pri-text">
+                  $ {formatCurrency(order.charges.tax)}
+                </p>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sec-text">Gratuity</p>
+                <p className="font-medium text-pri-text">
+                  $ {formatCurrency(order.charges.gratuity)}
+                </p>
+              </div>
+              <div className="border-t border-b border-dashed border-dim-text py-3">
+                <div className="flex items-end justify-between gap-4">
+                  <p className="text-base text-pri-text">Total</p>
+                  <h2 className="text-xl font-semibold text-sec-gold">
+                    $ {formatCurrency(order.charges.total)}
+                  </h2>
+                </div>
+              </div>
+              <p className="text-[10px] text-sec-text text-center">
+                All payments and transactions are securely processed through Ark
+                Limo, the operating company behind Blacarklimo.
+              </p>
+            </aside>
+          ) : (
+            <aside className="h-fit space-y-3 rounded-lg bg-card-bg p-4">
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sec-text">Booking ID</p>
+                <p className="font-medium text-pri-text text-right">
+                  {paymentRequest.bookingId?.slice(0, 16)}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sec-text">Payment Type</p>
+                <p className="font-medium text-pri-text uppercase text-right">
+                  {paymentRequest.type}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sec-text">Customer Name</p>
+                <p className="font-medium text-pri-text text-right">
+                  {paymentRequest?.order?.booking?.fullname}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between gap-6">
+                <p className="text-sec-text">Vehicle</p>
+                <p className="font-medium text-pri-text text-right truncate">
+                  {paymentRequest?.order?.booking?.vehicle?.name}
+                </p>
+              </div>
+
+              <div className="border-t border-b border-dashed border-dim-text py-3">
+                <div className="flex items-end justify-between gap-4">
+                  <p className="text-base text-pri-text">Amount</p>
+                  <h2 className="text-xl font-semibold text-sec-gold">
+                    $ {formatCurrency(paymentRequest.amount)}
+                  </h2>
+                </div>
+              </div>
+              <p className="text-[10px] text-sec-text text-center">
+                All payments and transactions are securely processed through Ark
+                Limo, the operating company behind Blacarklimo.
+              </p>
+            </aside>
+          )}
         </div>
       </div>
     </main>

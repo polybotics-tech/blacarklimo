@@ -26,7 +26,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const FleetDefaultCard = ({
+export const FleetDefaultCard = ({
   inWrapLayout = false,
   vehicle,
 }: FleetDefaultCardProps) => {
@@ -141,7 +141,7 @@ const FleetDefaultCard = ({
   );
 };
 
-const BookingGuideCard = ({
+export const BookingGuideCard = ({
   tag,
   title,
   desc,
@@ -199,7 +199,7 @@ const BookingGuideCard = ({
   );
 };
 
-const TestimonialCard = ({ testimonial }: TestimonialCardProps) => {
+export const TestimonialCard = ({ testimonial }: TestimonialCardProps) => {
   const rating = [1, 2, 3, 4, 5];
 
   return (
@@ -247,7 +247,7 @@ const TestimonialCard = ({ testimonial }: TestimonialCardProps) => {
   );
 };
 
-const FaqCard = ({ question, answer, foundHelpfulBy }: FaqsType) => {
+export const FaqCard = ({ question, answer, foundHelpfulBy }: FaqsType) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
@@ -283,7 +283,7 @@ const FaqCard = ({ question, answer, foundHelpfulBy }: FaqsType) => {
   );
 };
 
-const LongServiceCard = ({
+export const LongServiceCard = ({
   title,
   desc,
   isInverted = false,
@@ -331,7 +331,7 @@ const LongServiceCard = ({
   );
 };
 
-const ShortServiceCard = ({
+export const ShortServiceCard = ({
   title,
   desc,
   link,
@@ -363,7 +363,7 @@ const ShortServiceCard = ({
   );
 };
 
-const SummaryLocationCard = ({
+export const SummaryLocationCard = ({
   location,
   isLast,
   isStop,
@@ -402,16 +402,6 @@ const SummaryLocationCard = ({
       </div>
     </div>
   );
-};
-
-export {
-  FleetDefaultCard,
-  BookingGuideCard,
-  TestimonialCard,
-  FaqCard,
-  LongServiceCard,
-  ShortServiceCard,
-  SummaryLocationCard,
 };
 
 interface FleetDefaultCardProps {

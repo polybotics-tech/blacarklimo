@@ -3,19 +3,19 @@ import { MetadataRoute } from "next";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://blacarklimo.com",
+      url: "https://www.blacarklimo.com",
       lastModified: new Date(),
     },
     {
-      url: "https://blacarklimo.com/booking",
+      url: "https://www.blacarklimo.com/booking",
       lastModified: new Date(),
     },
     {
-      url: "https://blacarklimo.com/about",
+      url: "https://www.blacarklimo.com/about",
       lastModified: new Date(),
     },
     {
-      url: "https://blacarklimo.com/fleet",
+      url: "https://www.blacarklimo.com/fleet",
       lastModified: new Date(),
     },
   ];

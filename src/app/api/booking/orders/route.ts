@@ -6,7 +6,6 @@ import {
   countAllBookingOrders,
   createBookingOrder,
   createPaymentRequest,
-  getMultipleAdminPushTokens,
   getMultipleBookingOrders,
 } from "@/src/utils/db";
 import {
@@ -20,7 +19,7 @@ import {
 } from "@/src/utils/db/types";
 import { NextResponse } from "next/server";
 import { generatePaginationMeta } from "@/src/utils/generator";
-import { sendAdminPushNotification } from "@/src/services/mailer";
+import Jobs from "@/src/services/jobs";
 
 export async function POST(request: Request) {
   try {
@@ -62,20 +61,15 @@ export async function POST(request: Request) {
       type: "booking",
     });
 
-    //--send push notification to admins
-    const adminPushTokens = await getMultipleAdminPushTokens();
-    if (adminPushTokens.length) {
-      adminPushTokens.forEach((admin) =>
-        sendAdminPushNotification(admin.expoPushToken, {
-          title: `New Booking Request`,
-          body: `${paymentRequest.description}`,
-          data: {
-            screen: "booking",
-            id: paymentRequest.bookingId,
-          },
-        }),
-      );
-    }
+    //--send notification to admins
+    Jobs.notifyAdmin({
+      title: `New Booking Request`,
+      body: `${paymentRequest.description}`,
+      data: {
+        screen: "booking",
+        id: paymentRequest.bookingId,
+      },
+    });
 
     return NextResponse.json({
       success: true,
@@ -85,7 +79,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    //console.error("Create booking order error:", error);
+    console.error("Create booking order error:", error);
 
     return NextResponse.json(
       {
