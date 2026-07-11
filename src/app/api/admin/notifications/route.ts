@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    //console.error("Create notification instance error:", error);
+    console.error("Create notification instance error:", error);
 
     return NextResponse.json(
       {
