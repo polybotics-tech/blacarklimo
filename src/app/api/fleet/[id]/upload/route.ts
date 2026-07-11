@@ -29,7 +29,9 @@ export async function PUT(
 
     const formData = await request.formData();
 
-    const file = formData.get("image") as File;
+    const file = formData.get("image");
+
+    console.log("file request: ", file);
 
     const { error: fileValidationError } =
       await validateUploadedFileAsPhoto(file);
@@ -50,7 +52,7 @@ export async function PUT(
     }
 
     //--CONVERT TO BUFFER AND RESIZE
-    const buffer = await convertFileToBuffer(file);
+    const buffer = await convertFileToBuffer(file as File);
     const resizedBuffer = await resizeImageSizeByBuffer(buffer);
 
     //--UPLOAD IMAGE BUFFER TO STORAGE

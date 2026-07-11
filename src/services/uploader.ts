@@ -5,7 +5,7 @@ import constants from "@/src/libs/constants";
 import { supabase } from "@/src/utils/supabase";
 
 export async function validateUploadedFileAsPhoto(
-  file: File,
+  file: any,
 ): Promise<{ error: string | null }> {
   if (!(file instanceof File)) {
     return { error: "No image detected in upload" };
