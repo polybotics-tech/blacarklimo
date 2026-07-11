@@ -66,7 +66,7 @@ const constants = {
 
   token: {
     allowedBearers: ["Bearer"],
-    expiresIn: 60 * 60, // 60 minutes
+    expiresIn: 60 * 1440, // 60 minutes
   },
 
   photoUpload: {
