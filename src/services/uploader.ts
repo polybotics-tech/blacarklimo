@@ -48,7 +48,7 @@ export async function resizeImageSizeByBuffer(
 
       withoutEnlargement: true,
     })
-    .jpeg({
+    .webp({
       quality: 85,
     })
     .toBuffer();
@@ -62,7 +62,7 @@ export async function uploadImageBufferToStorage(
   bucket: string | undefined,
 ): Promise<{ error: string; uri: null } | { error: null; uri: string }> {
   //--RENAME FILE NAME
-  const extension = ".jpeg";
+  const extension = ".webp";
   const filename =
     directory + "/" + `${Date.now()}-${randomUUID()}` + extension;
 
@@ -70,7 +70,7 @@ export async function uploadImageBufferToStorage(
   const { error: uploadError } = await supabase.storage
     .from(bucket!)
     .upload(filename, buffer, {
-      contentType: "image/jpeg",
+      contentType: "image/webp",
       upsert: false,
     });
 
