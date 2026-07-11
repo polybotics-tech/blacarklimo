@@ -1,14 +1,17 @@
-import fs from "fs/promises";
-import path from "path";
-import { randomUUID } from "crypto";
-import sharp from "sharp";
-
 import { getVehicle, updateVehiclePhotoUri } from "@/src/utils/db";
 import { VehicleRecordType } from "@/src/utils/db/types";
 import { NextRequest, NextResponse } from "next/server";
 import constants from "@/src/libs/constants";
 import { validateAccessToken } from "@/src/services/admin";
 import { RedisCache } from "@/src/utils/cache";
+import { SUPABASE_BUCKET } from "@/src/utils/supabase";
+import {
+  convertFileToBuffer,
+  deleteImageFromStorageByUri,
+  resizeImageSizeByBuffer,
+  uploadImageBufferToStorage,
+  validateUploadedFileAsPhoto,
+} from "@/src/services/uploader";
 
 export async function PUT(
   request: NextRequest,
@@ -26,37 +29,19 @@ export async function PUT(
 
     const formData = await request.formData();
 
-    const file = formData.get("image");
+    const file = formData.get("image") as File;
 
-    if (!(file instanceof File)) {
+    const { error: fileValidationError } =
+      await validateUploadedFileAsPhoto(file);
+    if (fileValidationError) {
       return NextResponse.json(
-        { error: "Vehicle photo is missing" },
-        { status: 400 },
-      );
-    }
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-    if (!allowedTypes.includes(file.type)) {
-      return Response.json(
-        {
-          message: "Only JPG, PNG and WEBP images are allowed.",
-        },
-        { status: 400 },
-      );
-    }
-
-    if (file.size > constants.photoUpload.MAX_FILE_SIZE) {
-      return Response.json(
-        {
-          message: "Image must not exceed 3MB.",
-        },
+        { success: false, message: fileValidationError },
         { status: 400 },
       );
     }
 
     const { id } = await params;
     const vehicle: VehicleRecordType | null = await getVehicle(id);
-
     if (!vehicle) {
       return NextResponse.json(
         { success: false, message: "Vehicle not found." },
@@ -65,56 +50,43 @@ export async function PUT(
     }
 
     //--CONVERT TO BUFFER AND RESIZE
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const resizedBuffer = await sharp(buffer)
-      .resize({
-        width: constants.photoUpload.MAX_WIDTH,
-        height: constants.photoUpload.MAX_HEIGHT,
+    const buffer = await convertFileToBuffer(file);
+    const resizedBuffer = await resizeImageSizeByBuffer(buffer);
 
-        fit: "inside",
-
-        withoutEnlargement: true,
-      })
-      .webp({
-        quality: 85,
-      })
-      .toBuffer();
-
-    //--ENSURE DIRECTORY EXISTS
-    const uploadDir = path.join(
-      process.cwd(),
-      "public",
-      "assets",
-      "uploads",
-      "images",
-      "fleet",
-    );
-    await fs.mkdir(uploadDir, {
-      recursive: true,
-    });
-
-    //--RENAME FILE NAME
-    const extension = ".webp";
-    const filename = `${Date.now()}-${randomUUID()}` + extension;
-    await fs.writeFile(path.join(uploadDir, filename), resizedBuffer);
-
-    //--UPDATE VEHICLE PHOTO URI
-    const imageUri = "/assets/uploads/images/fleet/" + filename;
-    const updatedVehicle = await updateVehiclePhotoUri(id, imageUri);
-    if (!updatedVehicle) {
+    //--UPLOAD IMAGE BUFFER TO STORAGE
+    const directory = "vehicles";
+    const { error: uploadError, uri: uploadUri } =
+      await uploadImageBufferToStorage(
+        directory,
+        resizedBuffer,
+        SUPABASE_BUCKET,
+      );
+    if (uploadError || !uploadUri) {
       return NextResponse.json({
         success: false,
-        message: "Unable to upload vehicle image",
+        message: uploadError,
+      });
+    }
+
+    //--UPDATE VEHICLE PHOTO URI
+    const updatedVehicle = await updateVehiclePhotoUri(id, uploadUri);
+    if (!updatedVehicle) {
+      //--DELETE UPLOADED IMAGE
+      await deleteImageFromStorageByUri(directory, uploadUri, SUPABASE_BUCKET);
+
+      return NextResponse.json({
+        success: false,
+        message: "Unable to update vehicle image",
       });
     }
 
     //--IF OLD PHOTO EXISTS, DELETE IT
     if (vehicle.uri?.length > 0) {
-      const oldPath = path.join(process.cwd(), "public", vehicle.uri);
-      await fs.access(oldPath);
-
-      await fs.unlink(oldPath);
+      await deleteImageFromStorageByUri(
+        directory,
+        vehicle.uri,
+        SUPABASE_BUCKET,
+      );
     }
 
     await RedisCache.delete(

@@ -5,7 +5,7 @@ import { AdminRecordType } from "../utils/db/types";
 import { hash } from "../utils/hash";
 import { token } from "../utils/token";
 
-async function registerAdmin(body: {
+export async function registerAdmin(body: {
   email: string;
   password: string;
   fullname: string;
@@ -38,7 +38,10 @@ async function registerAdmin(body: {
   return { accessToken: String(accessToken) };
 }
 
-async function loginAdmin(body: { email: string; password: string }): Promise<{
+export async function loginAdmin(body: {
+  email: string;
+  password: string;
+}): Promise<{
   error?: string;
   accessToken?: string;
   admin?: Partial<AdminRecordType>;
@@ -70,7 +73,7 @@ async function loginAdmin(body: { email: string; password: string }): Promise<{
   return { accessToken: String(accessToken), admin: safeAdmin };
 }
 
-async function validateAccessToken(
+export async function validateAccessToken(
   req: NextRequest,
 ): Promise<{ error?: string; admin?: Partial<AdminRecordType> }> {
   try {
@@ -116,5 +119,3 @@ async function validateAccessToken(
     return { error: errMsg };
   }
 }
-
-export { registerAdmin, loginAdmin, validateAccessToken };

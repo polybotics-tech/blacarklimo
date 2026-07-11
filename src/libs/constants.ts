@@ -72,7 +72,7 @@ const constants = {
   photoUpload: {
     MAX_WIDTH: 1600,
     MAX_HEIGHT: 1200,
-    MAX_FILE_SIZE: 3 * 1024 * 1024,
+    MAX_FILE_SIZE: 5 * 1024 * 1024,
   },
 };
 
