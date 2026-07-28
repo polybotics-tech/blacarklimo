@@ -1,8 +1,5 @@
-"use client";
-
-import BookingScreen from "@/src/screens/BookingScreen";
+import BookingScreenWrapper from "@/src/screens/BookingScreen";
 import { Metadata } from "next";
-import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Book A Chauffeur | Blacarklimo",
@@ -28,15 +25,5 @@ export const metadata: Metadata = {
 };
 
 export default function Booking() {
-  return (
-    <Suspense
-      fallback={
-        <div className="w-full h-full centralize">
-          <div className="w-12 h-12 border-4 border-sec-text border-t-transparent rounded-full animate-spin" />
-        </div>
-      }
-    >
-      <BookingScreen />
-    </Suspense>
-  );
+  return <BookingScreenWrapper />;
 }

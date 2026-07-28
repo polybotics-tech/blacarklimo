@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 
 import mapboxgl from "mapbox-gl";
 import type { Feature, LineString } from "geojson";
@@ -25,7 +25,7 @@ import {
 } from "@/src/components/inpage/BookingFlowSection";
 import constants from "@/src/libs/constants";
 
-export default function BookingScreen() {
+function BookingScreen() {
   const ACTIVITY_ZOOM = 13;
 
   //--hooks
@@ -503,5 +503,19 @@ export default function BookingScreen() {
         <PendingBookingSection onClose={() => setHasPendingBooking(false)} />
       )}
     </div>
+  );
+}
+
+export default function BookingScreenWrapper() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full h-full centralize">
+          <div className="w-12 h-12 border-4 border-sec-text border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <BookingScreen />
+    </Suspense>
   );
 }
