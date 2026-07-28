@@ -11,7 +11,10 @@ export default function OrganizationSchema() {
 
     url: "https://www.blacarklimo.com",
 
-    logo: "https://www.blacarklimo.com/assets/images/logo.png",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.blacarklimo.com/assets/images/logo.png",
+    },
 
     image: "https://www.blacarklimo.com/assets/images/img13.jpg",
 
