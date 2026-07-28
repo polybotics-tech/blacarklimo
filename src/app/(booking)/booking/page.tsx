@@ -4,25 +4,28 @@ import BookingScreen from "@/src/screens/BookingScreen";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Book Limo Reservation | Blacarklimo",
-    description:
-      "Secure a premium chauffeur reservation, tailored for your desired travel experience. Choose your prefered vehicle from our fleet, select your destinations from our responsive map, and complete your booking.",
-    keywords: [
-      "limo service",
-      "corporate chauffeur",
-      "executive sedan",
-      "personal driver",
-      "black limo",
-      "booking",
-      "blacarklimo",
-    ],
-    alternates: {
-      canonical: "/booking",
-    },
-  };
-}
+export const metadata: Metadata = {
+  title: "Book A Chauffeur | Blacarklimo",
+  description:
+    "Reserve premium chauffeur services with Blacarklimo. Book luxury airport transfers, executive transportation, hourly chauffeur services, and private rides throughout Northern California with secure online reservations.",
+  keywords: [
+    "book chauffeur service",
+    "airport transfer booking",
+    "luxury transportation booking",
+    "executive car service",
+    "black car reservation",
+    "chauffeur booking Northern California",
+    "airport transportation",
+    "private driver service",
+    "luxury ride booking",
+    "hourly chauffeur service",
+    "limo service",
+    "blacarklimo",
+  ],
+  alternates: {
+    canonical: "/booking",
+  },
+};
 
 export default function Booking() {
   return (
