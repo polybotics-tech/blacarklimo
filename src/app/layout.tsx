@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Sora, Poppins } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "@/src/components/ReduxProvider";
+import OrganizationSchema from "@/src/components/OrganisationSchema";
 import { Toaster } from "react-hot-toast";
 
 const sora = Sora({
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     emails: ["blacarklimo@gmail.com"],
-    images: [{ url: "https://blacarklimo.com/assets/images/img13.jpg" }],
+    images: [{ url: "https://www.blacarklimo.com/assets/images/img13.jpg" }],
     title: "Blacarklimo | Professional Chauffeur Services",
     description:
       "Experience luxury and comfort with Blacarklimo, your premier choice for professional chauffeur services in Northern California. Book with us today for an unforgettable top-of-the-line travel experience.",
@@ -54,6 +55,7 @@ export default function RootLayout({
       className={`${sora.variable} ${poppins.variable} h-full antialiased scroll-pt-8 max-sm:no-scrollbars`}
     >
       <body className="min-h-full">
+        <OrganizationSchema />
         <Toaster position="bottom-right" />
 
         <ReduxProvider>{children}</ReduxProvider>

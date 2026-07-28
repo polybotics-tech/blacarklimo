@@ -207,3 +207,9 @@ export type AdminStateType = {
   accessToken: string | null;
   isLogged: boolean;
 };
+
+//---------------
+export type AreaServedType = {
+  "@type": "AdministrativeArea" | "City";
+  name: string;
+};

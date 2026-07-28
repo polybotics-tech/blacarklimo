@@ -1,5 +1,7 @@
 import constants from "@/src/libs/constants";
 import { PaginationMetaType } from "@/src/utils/db/types";
+import { AreaServedType, CountyType } from "@/src/libs/types";
+import { ncPopularCounties } from "@/src/libs/places";
 
 export function generateSessionToken() {
   return crypto.randomUUID();
@@ -40,4 +42,33 @@ export function generateRandomPromoCodes(min = 6, max = 8) {
   }
 
   return result;
+}
+
+export function generateAreaServed(): AreaServedType[] {
+  const counties: CountyType[] = ncPopularCounties;
+
+  const countyNames = [
+    ...new Set(counties.map((county) => county.name.trim()).filter(Boolean)),
+  ].sort((a, b) => a.localeCompare(b));
+
+  return [
+    {
+      "@type": "AdministrativeArea",
+      name: "Northern California",
+    },
+
+    ...countyNames.map((name) => ({
+      "@type": "AdministrativeArea" as const,
+      name,
+    })),
+
+    {
+      "@type": "City",
+      name: "Oakland",
+    },
+    {
+      "@type": "City",
+      name: "San Jose",
+    },
+  ];
 }
