@@ -3,7 +3,7 @@ import { generateAreaServed } from "@/src/utils/generator";
 export default function OrganizationSchema() {
   const schema = {
     "@context": "https://schema.org",
-    "@type": "LimousineService",
+    "@type": "LocalBusiness",
 
     name: "Blacarklimo",
 
