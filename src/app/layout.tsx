@@ -22,6 +22,10 @@ export const metadata: Metadata = {
     "Experience luxury and comfort with Blacarklimo, your premier choice for professional chauffeur services in Northern California. Book with us today for an unforgettable top-of-the-line travel experience.",
   keywords: [
     "blacark",
+    "blacarklimo",
+    "black limo",
+    "black car",
+    "limo",
     "limousine",
     "northern california",
     "chauffeur",

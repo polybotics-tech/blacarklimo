@@ -6,10 +6,11 @@ export const metadata: Metadata = {
   description:
     "Learn about Blacarklimo, a trusted provider of luxury chauffeur and black car services across Northern California. Discover our commitment to professionalism, reliability, comfort, and exceptional customer service.",
   keywords: [
-    "Blacarklimo",
-    "about Blacarklimo",
+    "blacarklimo",
+    "about blacarklimo",
     "luxury chauffeur service",
-    "black car service Northern California",
+    "black car service",
+    "Northern California",
     "executive transportation",
     "professional chauffeurs",
     "airport transportation",
@@ -17,6 +18,9 @@ export const metadata: Metadata = {
     "corporate travel",
     "luxury travel solutions",
   ],
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 export default function About() {

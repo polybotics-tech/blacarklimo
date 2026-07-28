@@ -17,6 +17,9 @@ export const metadata: Metadata = {
     "chauffeur vehicles Northern California",
     "luxury transportation fleet",
   ],
+  alternates: {
+    canonical: "/fleet",
+  },
 };
 
 export default function Fleet() {
