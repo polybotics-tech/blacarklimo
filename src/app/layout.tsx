@@ -4,6 +4,7 @@ import "./globals.css";
 import ReduxProvider from "@/src/components/ReduxProvider";
 import OrganizationSchema from "@/src/components/OrganisationSchema";
 import { Toaster } from "react-hot-toast";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -60,6 +61,8 @@ export default function RootLayout({
 
         <ReduxProvider>{children}</ReduxProvider>
       </body>
+
+      <GoogleAnalytics gaId="G-BP0LY2P5ZS" />
     </html>
   );
 }
