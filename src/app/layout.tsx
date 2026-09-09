@@ -60,9 +60,10 @@ export default function RootLayout({
         <Toaster position="bottom-right" />
 
         <ReduxProvider>{children}</ReduxProvider>
+        <GoogleAnalytics gaId="G-BP0LY2P5ZS" />
       </body>
 
-      <GoogleAnalytics gaId="G-BP0LY2P5ZS" />
+      
     </html>
   );
 }
