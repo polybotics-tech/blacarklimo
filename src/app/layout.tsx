@@ -35,6 +35,12 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Polybotics Tech Hub" }, { name: "Ark Limo" }],
   creator: "Polybotics Tech Hub",
+
+  // Google Search Console Verification
+  verification: {
+    google: "C8bMgfCXi1vpTpytLXXibpp66wtMAUwmgpjcLKGdbTA",
+  },
+
   openGraph: {
     type: "website",
     emails: ["blacarklimo@gmail.com"],
