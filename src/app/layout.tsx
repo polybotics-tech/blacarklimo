@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Sora, Poppins } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import ReduxProvider from "@/src/components/ReduxProvider";
 import OrganizationSchema from "@/src/components/OrganisationSchema";
 import { Toaster } from "react-hot-toast";
-import { GoogleAnalytics } from "@next/third-parties/google";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -38,7 +38,11 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     emails: ["blacarklimo@gmail.com"],
-    images: [{ url: "https://www.blacarklimo.com/assets/images/img13.jpg" }],
+    images: [
+      {
+        url: "https://www.blacarklimo.com/assets/images/img13.jpg",
+      },
+    ],
     title: "Blacarklimo | Professional Chauffeur Services",
     description:
       "Experience luxury and comfort with Blacarklimo, your premier choice for professional chauffeur services in Northern California. Book with us today for an unforgettable top-of-the-line travel experience.",
@@ -57,13 +61,26 @@ export default function RootLayout({
     >
       <body className="min-h-full">
         <OrganizationSchema />
+
         <Toaster position="bottom-right" />
 
         <ReduxProvider>{children}</ReduxProvider>
-        <GoogleAnalytics gaId="G-BP0LY2P5ZS" />
-      </body>
 
-      
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-BP0LY2P5ZS"
+          strategy="afterInteractive"
+        />
+
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-BP0LY2P5ZS');
+          `}
+        </Script>
+      </body>
     </html>
   );
 }
