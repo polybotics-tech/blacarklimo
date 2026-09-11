@@ -53,6 +53,7 @@ export const metadata: Metadata = {
 
   openGraph: {
     type: "website",
+    url: "https://www.blacarklimo.com/",
     emails: ["blacarklimo@gmail.com"],
     images: [
       {
