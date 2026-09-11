@@ -21,10 +21,10 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.blacarklimo.com"),
 
-  title: "Blacarklimo | Professional Chauffeur Services",
+  title: "Professional Chauffeur Services California | Blacark Limo",
 
   description:
-    "Experience luxury and comfort with Blacarklimo, your premier choice for professional chauffeur services in Northern California. Book with us today for an unforgettable top-of-the-line travel experience.",
+    "Experience top luxury SFO airport chauffeur services for seamless transfers, corporate travel and private rides across Northern California with Blacark Limo.",
 
   alternates: {
     canonical: "/",
