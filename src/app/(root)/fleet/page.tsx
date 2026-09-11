@@ -2,9 +2,11 @@ import FleetScreen from "@/src/screens/FleetScreen";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Our Luxury Fleet | Blacarklimo",
+  title: "Explore Our Premium Luxury Chauffeur Fleet CA | Blacark Limo",
+
   description:
-    "Explore our premium fleet of luxury sedans, executive SUVs, and chauffeur-driven vehicles designed for airport transfers, corporate travel, special events, and private transportation throughout Northern California.",
+    "Explore luxury sedans, executive SUVs, chauffeur-driven vehicles for airport transfers, private & corporate travel across Northern California with Blacark Limo.",
+
   keywords: [
     "luxury fleet",
     "chauffeur vehicles",
@@ -17,8 +19,25 @@ export const metadata: Metadata = {
     "chauffeur vehicles Northern California",
     "luxury transportation fleet",
   ],
+
   alternates: {
     canonical: "/fleet",
+  },
+
+  openGraph: {
+    type: "website",
+    url: "https://www.blacarklimo.com/fleet",
+    title: "Explore Our Premium Luxury Chauffeur Fleet CA | Blacark Limo",
+    description:
+      "Explore luxury sedans, executive SUVs, chauffeur-driven vehicles for airport transfers, private & corporate travel across Northern California with Blacark Limo.",
+    images: [
+      {
+        url: "https://www.blacarklimo.com/assets/images/img13.jpg",
+        width: 736,
+        height: 736,
+        alt: "Blacark Limo Premium Chauffeur Fleet",
+      },
+    ],
   },
 };
 
