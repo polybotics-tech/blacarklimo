@@ -36,9 +36,9 @@ const DefaultNavigation = () => {
                   height={20}
                 />
               </div>
-              <h4>
+              <p className="log-text">
                 Blacark<span className="text-sec-gold">limo</span>
-              </h4>
+              </p>
             </div>
           </Link>
 
