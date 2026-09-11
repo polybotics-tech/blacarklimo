@@ -29,7 +29,7 @@ const DefaultSectionHeader = ({
           </p>
         </div>
       )}
-      <h1 className={`${alignText}`}>{heading}</h1>
+      <h2 className={`${alignText}`}>{heading}</h2>
 
       <p className={`max-w-xl ${alignText}`}>{subHeading}</p>
     </div>
