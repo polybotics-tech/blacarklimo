@@ -31,6 +31,14 @@ export const metadata: Metadata = {
     title: "About Our Luxury Chauffeur Services CA | Blacark Limo",
     description:
       "Learn about trusted luxury chauffeur & black car services offering reliability and professional customer care across Northern California with Blacark Limo.",
+    images: [
+      {
+        url: "https://www.blacarklimo.com/assets/images/img13.jpg",
+        width: 736,
+        height: 736,
+        alt: "Blacark Limo - Luxury Chauffeur Services",
+      },
+    ],
   },
 };
 
