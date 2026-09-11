@@ -51,6 +51,7 @@ const TrustBuildingSection = ({ screen }: TrustBuildingSectionProps) => {
           <DefaultSectionHeader
             align="left"
             title="Why Choose Us"
+            headingLevel="h2"
             heading={
               <>
                 <span className="text-pri-gold">Excellence</span> In Every Mile
