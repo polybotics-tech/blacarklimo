@@ -2,9 +2,11 @@ import AboutScreen from "@/src/screens/AboutScreen";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us | Blacarklimo",
+  title: "About Our Luxury Chauffeur Services CA | Blacark Limo",
+
   description:
-    "Learn about Blacarklimo, a trusted provider of luxury chauffeur and black car services across Northern California. Discover our commitment to professionalism, reliability, comfort, and exceptional customer service.",
+    "Learn about trusted luxury chauffeur & black car services offering reliability and professional customer care across Northern California with Blacark Limo.",
+
   keywords: [
     "blacarklimo",
     "about blacarklimo",
@@ -18,8 +20,17 @@ export const metadata: Metadata = {
     "corporate travel",
     "luxury travel solutions",
   ],
+
   alternates: {
     canonical: "/about",
+  },
+
+  openGraph: {
+    type: "website",
+    url: "https://www.blacarklimo.com/about",
+    title: "About Our Luxury Chauffeur Services CA | Blacark Limo",
+    description:
+      "Learn about trusted luxury chauffeur & black car services offering reliability and professional customer care across Northern California with Blacark Limo.",
   },
 };
 
