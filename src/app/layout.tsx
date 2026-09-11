@@ -19,9 +19,17 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.blacarklimo.com"),
+
   title: "Blacarklimo | Professional Chauffeur Services",
+
   description:
     "Experience luxury and comfort with Blacarklimo, your premier choice for professional chauffeur services in Northern California. Book with us today for an unforgettable top-of-the-line travel experience.",
+
+  alternates: {
+    canonical: "/",
+  },
+
   keywords: [
     "blacark",
     "blacarklimo",
@@ -33,7 +41,9 @@ export const metadata: Metadata = {
     "chauffeur",
     "arklimo",
   ],
+
   authors: [{ name: "Polybotics Tech Hub" }, { name: "Ark Limo" }],
+
   creator: "Polybotics Tech Hub",
 
   // Google Search Console Verification
