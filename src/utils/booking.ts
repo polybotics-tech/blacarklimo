@@ -138,26 +138,30 @@ function calSubTotalByMile(pricePerMile: number, estimatedDistance: number) {
     return roundToCurrency(subtotal);
   }
 
-  if (
-    estimatedDistance > STARTING_MILE_FOR_REDUCTION_50 &&
-    estimatedDistance < STARTING_MILE_FOR_REDUCTION_80
-  ) {
-    subtotal = subtotal * 0.75; //-- (-25%)
-    return roundToCurrency(subtotal);
+  if (estimatedDistance > STARTING_MILE_FOR_REDUCTION_50) {
+    subtotal = estimatedDistance * 5; //-- (charge by $5 for all distance more than 50 miles)
   }
 
-  if (
-    estimatedDistance > STARTING_MILE_FOR_REDUCTION_80 &&
-    estimatedDistance < STARTING_MILE_FOR_REDUCTION_110
-  ) {
-    subtotal = subtotal * 0.7; //-- (-30%)
-    return roundToCurrency(subtotal);
-  }
+  // if (
+  //   estimatedDistance > STARTING_MILE_FOR_REDUCTION_50 &&
+  //   estimatedDistance < STARTING_MILE_FOR_REDUCTION_80
+  // ) {
+  //   subtotal = subtotal * 0.75; //-- (-25%)
+  //   return roundToCurrency(subtotal);
+  // }
 
-  if (estimatedDistance > STARTING_MILE_FOR_REDUCTION_110) {
-    subtotal = subtotal * 0.65; //-- (-35%)
-    return roundToCurrency(subtotal);
-  }
+  // if (
+  //   estimatedDistance > STARTING_MILE_FOR_REDUCTION_80 &&
+  //   estimatedDistance < STARTING_MILE_FOR_REDUCTION_110
+  // ) {
+  //   subtotal = subtotal * 0.7; //-- (-30%)
+  //   return roundToCurrency(subtotal);
+  // }
+
+  // if (estimatedDistance > STARTING_MILE_FOR_REDUCTION_110) {
+  //   subtotal = subtotal * 0.65; //-- (-35%)
+  //   return roundToCurrency(subtotal);
+  // }
 
   return roundToCurrency(subtotal);
 }
