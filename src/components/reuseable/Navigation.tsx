@@ -116,7 +116,7 @@ const DefaultNavigation = () => {
                         : "text-sec-text"
                     }`}
                   >
-                    Luxury Chauffeur Service in San Lorenzo, CA
+                   San Lorenzo CA
                   </Link>
                 </div>
               </div>
@@ -249,9 +249,7 @@ const DefaultNavigation = () => {
                       : "text-sec-text"
                   }`}
                 >
-                  Luxury Chauffeur Service
-                  <br />
-                  in San Lorenzo, CA
+                  San Lorenzo CA
                 </Link>
               </div>
             </li>
