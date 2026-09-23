@@ -86,13 +86,17 @@ const DefaultNavigation = () => {
             <li className="relative group">
               <button
                 type="button"
-                className={`flex items-center gap-1 ${
-                  isServicesActive
-                    ? "font-medium text-sec-gold"
-                    : "hover:text-pri-text"
-                }`}
+                className="flex items-center gap-1"
               >
-                <span>Services Area</span>
+                <p
+                  className={`${
+                    isServicesActive
+                      ? "font-medium text-sec-gold"
+                      : "hover:text-pri-text"
+                  }`}
+                >
+                  Services Area
+                </p>
 
                 <ChevronDown
                   size={14}
@@ -204,13 +208,17 @@ const DefaultNavigation = () => {
                 onClick={() =>
                   setIsMobileServicesOpen((prev) => !prev)
                 }
-                className={`flex items-center gap-1 ${
-                  isServicesActive
-                    ? "font-medium text-sec-gold"
-                    : ""
-                }`}
+                className="flex items-center gap-1"
               >
-                <span>Services Area</span>
+                <p
+                  className={`${
+                    isServicesActive
+                      ? "font-medium text-sec-gold"
+                      : ""
+                  }`}
+                >
+                  Services Area
+                </p>
 
                 <ChevronDown
                   size={16}
