@@ -3,20 +3,56 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Luxury Chauffeur Service in San Lorenzo, CA | Blacark Limo",
+
   description:
-    "Luxury chauffeur service in San Lorenzo, CA for airport transfers, corporate travel, private events, weddings, and comfortable door-to-door transportation throughout the Bay Area.",
+    "Book a luxury chauffeur service in San Lorenzo, CA with Blacark Limo. Private airport transfers to SFO, OAK & SJC, corporate travel, and events. Get a quote.",
+
   alternates: {
     canonical:
       "https://www.blacarklimo.com/luxury-chauffeur-service-san-lorenzo-ca/",
   },
+
   openGraph: {
-    title: "Luxury Chauffeur Service in San Lorenzo, CA",
+    title: "Luxury Chauffeur Service in San Lorenzo, CA | Blacark Limo",
+
     description:
       "Premium chauffeur and private transportation service in San Lorenzo, CA for airport transfers, corporate travel, events, and more.",
+
     url: "https://www.blacarklimo.com/luxury-chauffeur-service-san-lorenzo-ca/",
+
+    siteName: "Blacark Limo",
+
     type: "website",
+
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=1200&q=85",
+        width: 1200,
+        height: 630,
+        alt: "Luxury Chauffeur Service in San Lorenzo, CA - Blacark Limo",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+
+    title: "Luxury Chauffeur Service in San Lorenzo, CA | Blacark Limo",
+
+    description:
+      "Premium chauffeur and private transportation service in San Lorenzo, CA for airport transfers, corporate travel, events, and more.",
+
+    images: [
+      "https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=1200&q=85",
+    ],
+  },
+
+  robots: {
+    index: true,
+    follow: true,
   },
 };
+
 
 const faqs = [
   {
@@ -225,7 +261,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
 
             <div className="image-card">
               <img
-                src="https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=1200&q=85"
+                src="https://www.blacarklimo.com/assets/images/unnamed (5).jpg"
                 alt="Luxury black chauffeur vehicle"
               />
             </div>
@@ -285,7 +321,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
           <div className="container two-column reverse-mobile">
             <div className="image-card">
               <img
-                src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=85"
+                src="https://www.blacarklimo.com/assets/images/unnamed (5).jpg"
                 alt="Airport transportation and private chauffeur service"
               />
             </div>
@@ -317,7 +353,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
               </p>
 
               <a
-                href="mailto:blacarklimo@gmail.com?subject=Airport%20Transfer%20Request%20-%20San%20Lorenzo"
+                href="mailto:blacarklimo@gmail.com"
                 className="text-cta"
               >
                 CTA: Reserve Your Airport Transfer →
@@ -374,7 +410,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
             <div className="corporate-layout">
               <div className="corporate-image">
                 <img
-                  src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&w=1200&q=85"
+                  src="https://www.blacarklimo.com/assets/images/unnamed (6).jpg"
                   alt="Executive corporate chauffeur transportation"
                 />
               </div>
@@ -456,7 +492,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
 
             <div className="image-card tall">
               <img
-                src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=85"
+                src="https://www.blacarklimo.com/assets/images/unnamed (7).jpg"
                 alt="Luxury black car for private chauffeur transportation"
               />
             </div>
@@ -552,7 +588,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
           <div className="container two-column">
             <div className="image-card">
               <img
-                src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1200&q=85"
+                src="https://www.blacarklimo.com/assets/images/unnamed (8).jpg"
                 alt="Luxury vehicle serving San Lorenzo and Northern California"
               />
             </div>
@@ -696,7 +732,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
 
             <div className="hero-buttons">
               <a
-                href="mailto:blacarklimo@gmail.com?subject=San%20Lorenzo%20Chauffeur%20Booking"
+                href="mailto:blacarklimo@gmail.com"
                 className="btn btn-primary"
               >
                 Get Your Free Quote
@@ -708,7 +744,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
             </div>
 
             <a
-              href="mailto:blacarklimo@gmail.com?subject=Corporate%20Account%20Request"
+              href="mailto:blacarklimo@gmail.com"
               className="corporate-link"
             >
               CTA: Open a Corporate Account →
@@ -856,7 +892,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
               </p>
 
               <a
-                href="mailto:blacarklimo@gmail.com?subject=Luxury%20Chauffeur%20Service%20San%20Lorenzo%20Quote"
+                href="mailto:blacarklimo@gmail.com"
                 className="btn btn-primary"
               >
                 Request Your Quote
@@ -900,7 +936,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
           overflow: hidden;
           background:
             linear-gradient(90deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.68) 45%, rgba(0,0,0,.25) 100%),
-            url("https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=2000&q=90")
+            url("https://www.blacarklimo.com/assets/images/unnamed (8).jpg")
             center/cover no-repeat;
         }
 
@@ -1304,7 +1340,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
           inset: 0;
           background:
             linear-gradient(90deg, rgba(0,0,0,.9), rgba(0,0,0,.5)),
-            url("https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2000&q=90")
+            url("https://www.blacarklimo.com/assets/images/unnamed (8).jpg")
             center/cover no-repeat;
         }
 
