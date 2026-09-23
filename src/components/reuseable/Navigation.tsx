@@ -1,7 +1,14 @@
 "use client";
 
 import constants from "@/src/libs/constants";
-import { ArrowRight, ChevronLeft, Menu, Phone, X } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronDown,
+  ChevronLeft,
+  Menu,
+  Phone,
+  X,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -12,20 +19,30 @@ const DefaultNavigation = () => {
   const curPath = usePathname();
 
   //--states
-  const [isMobileNavOpen, setIsMobileNavOpen] = React.useState<boolean>(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] =
+    React.useState<boolean>(false);
+
+  const [isMobileServicesOpen, setIsMobileServicesOpen] =
+    React.useState<boolean>(false);
 
   //--variables
   const isBookingPage: boolean = curPath === "/booking";
+
+  const servicePath = "/luxury-chauffeur-service-san-lorenzo-ca/";
+
   const navigationPaths: { name: string; url: string }[] = [
     { name: "Home", url: "/" },
     { name: "About Us", url: "/about" },
     { name: "Our Fleet", url: "/fleet" },
   ];
 
+  const isServicesActive = curPath === servicePath;
+
   return (
     <>
-      <nav className="w-full  sticky top-0 left-0 z-50 bg-pri-bg/70 backdrop-blur-sm">
+      <nav className="w-full sticky top-0 left-0 z-50 bg-pri-bg/70 backdrop-blur-sm">
         <div className="w-full max-w-5xl mx-auto py-4 md:py-2 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+          {/* LOGO */}
           <Link href={"/"}>
             <div className="flex items-center gap-1">
               <div className="w-5 h-5 rounded-sm overflow-hidden">
@@ -36,12 +53,14 @@ const DefaultNavigation = () => {
                   height={20}
                 />
               </div>
+
               <p className="log-text">
                 Blacark<span className="text-sec-gold">limo</span>
               </p>
             </div>
           </Link>
 
+          {/* DESKTOP NAVIGATION */}
           <ul className="hidden sm:flex items-center gap-6">
             {navigationPaths.map((nav, idx) => {
               const isActive = curPath === nav.url;
@@ -50,7 +69,11 @@ const DefaultNavigation = () => {
                 <li key={idx}>
                   <Link href={nav.url}>
                     <p
-                      className={`${isActive ? "font-medium text-sec-gold" : "hover:text-pri-text"}`}
+                      className={`${
+                        isActive
+                          ? "font-medium text-sec-gold"
+                          : "hover:text-pri-text"
+                      }`}
                     >
                       {nav.name}
                     </p>
@@ -58,8 +81,45 @@ const DefaultNavigation = () => {
                 </li>
               );
             })}
+
+            {/* SERVICES AREA DROPDOWN */}
+            <li className="relative group">
+              <button
+                type="button"
+                className={`flex items-center gap-1 ${
+                  isServicesActive
+                    ? "font-medium text-sec-gold"
+                    : "hover:text-pri-text"
+                }`}
+              >
+                <span>Services Area</span>
+
+                <ChevronDown
+                  size={14}
+                  strokeWidth={1.5}
+                  className="transition-transform duration-200 group-hover:rotate-180"
+                />
+              </button>
+
+              {/* DROPDOWN */}
+              <div className="absolute left-0 top-full pt-3 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
+                <div className="w-72 rounded-lg bg-pri-bg border border-dim-text/30 shadow-xl overflow-hidden">
+                  <Link
+                    href={servicePath}
+                    className={`block px-4 py-3 text-sm hover:bg-sec-bg hover:text-sec-gold transition-colors ${
+                      isServicesActive
+                        ? "text-sec-gold"
+                        : "text-sec-text"
+                    }`}
+                  >
+                    Luxury Chauffeur Service in San Lorenzo, CA
+                  </Link>
+                </div>
+              </div>
+            </li>
           </ul>
 
+          {/* DESKTOP RIGHT SIDE */}
           <div className="hidden sm:flex items-center gap-2">
             <Link
               href={`tel:${constants.companyPhone}`}
@@ -70,6 +130,7 @@ const DefaultNavigation = () => {
                 strokeWidth={1.3}
                 className="text-sec-text group-hover:text-pri-text"
               />
+
               <p className="text-[9px] group-hover:text-pri-text">
                 {constants.companyPhone}
               </p>
@@ -85,7 +146,7 @@ const DefaultNavigation = () => {
             )}
           </div>
 
-          {/**MOBILE NAVIGATION BUTTON */}
+          {/* MOBILE NAVIGATION BUTTON */}
           <button
             className="w-6 h-6 sm:hidden"
             onClick={() => setIsMobileNavOpen((prev) => !prev)}
@@ -106,11 +167,13 @@ const DefaultNavigation = () => {
           </button>
         </div>
 
-        {/**MOBILE NAV BAR */}
+        {/* MOBILE NAV BAR */}
         <div
-          className={`sm:hidden w-full ${isMobileNavOpen ? "max-h-96" : "max-h-0"} overflow-hidden transition-all ease-in-out duration-300 absolute top-14 left-0 z-5 bg-pri-bg/95`}
+          className={`sm:hidden w-full ${
+            isMobileNavOpen ? "max-h-[500px]" : "max-h-0"
+          } overflow-hidden transition-all ease-in-out duration-300 absolute top-14 left-0 z-5 bg-pri-bg/95`}
         >
-          <ul className="flex flex-col items-center gap-8 py-8 ">
+          <ul className="flex flex-col items-center gap-8 py-8">
             {navigationPaths.map((nav, idx) => {
               const isActive = curPath === nav.url;
 
@@ -120,13 +183,70 @@ const DefaultNavigation = () => {
                     href={nav.url}
                     onClick={() => setIsMobileNavOpen(false)}
                   >
-                    <p className={`${isActive && "font-medium text-sec-gold"}`}>
+                    <p
+                      className={`${
+                        isActive
+                          ? "font-medium text-sec-gold"
+                          : ""
+                      }`}
+                    >
                       {nav.name}
                     </p>
                   </Link>
                 </li>
               );
             })}
+
+            {/* MOBILE SERVICES AREA */}
+            <li className="flex flex-col items-center">
+              <button
+                type="button"
+                onClick={() =>
+                  setIsMobileServicesOpen((prev) => !prev)
+                }
+                className={`flex items-center gap-1 ${
+                  isServicesActive
+                    ? "font-medium text-sec-gold"
+                    : ""
+                }`}
+              >
+                <span>Services Area</span>
+
+                <ChevronDown
+                  size={16}
+                  strokeWidth={1.5}
+                  className={`transition-transform duration-200 ${
+                    isMobileServicesOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* MOBILE SERVICES DROPDOWN */}
+              <div
+                className={`overflow-hidden transition-all duration-300 ${
+                  isMobileServicesOpen
+                    ? "max-h-32 mt-4 opacity-100"
+                    : "max-h-0 opacity-0"
+                }`}
+              >
+                <Link
+                  href={servicePath}
+                  onClick={() => {
+                    setIsMobileNavOpen(false);
+                    setIsMobileServicesOpen(false);
+                  }}
+                  className={`block text-center text-sm px-5 py-2 ${
+                    isServicesActive
+                      ? "text-sec-gold"
+                      : "text-sec-text"
+                  }`}
+                >
+                  Luxury Chauffeur Service
+                  <br />
+                  in San Lorenzo, CA
+                </Link>
+              </div>
+            </li>
           </ul>
 
           <p className="text-center text-dim-text text-[10px] py-4 border-t border-dim-text border-dashed">
@@ -135,14 +255,18 @@ const DefaultNavigation = () => {
         </div>
       </nav>
 
-      {/**MOBILE ACTION BUTTON */}
+      {/* MOBILE ACTION BUTTON */}
       {!isBookingPage && (
         <div className="w-full py-2 px-4 sm:py-4 flex items-center justify-center gap-2 fixed bottom-0 left-0 z-50 bg-pri-bg/90 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none md:hidden">
           <Link
             href={`tel:${constants.companyPhone}`}
-            className=" sm:hidden w-10 h-10 rounded-full bg-card-bg flex items-center justify-center"
+            className="sm:hidden w-10 h-10 rounded-full bg-card-bg flex items-center justify-center"
           >
-            <Phone size={18} strokeWidth={1.3} className="text-pri-text" />
+            <Phone
+              size={18}
+              strokeWidth={1.3}
+              className="text-pri-text"
+            />
           </Link>
 
           <Link
@@ -151,7 +275,11 @@ const DefaultNavigation = () => {
           >
             <p className="font-medium text-pri-bg">Book A Ride</p>
 
-            <ArrowRight size={18} strokeWidth={1.3} className="text-pri-bg" />
+            <ArrowRight
+              size={18}
+              strokeWidth={1.3}
+              className="text-pri-bg"
+            />
           </Link>
         </div>
       )}
@@ -159,7 +287,9 @@ const DefaultNavigation = () => {
   );
 };
 
-const BookingNavigation = ({ children }: BookingNavigationProps) => {
+const BookingNavigation = ({
+  children,
+}: BookingNavigationProps) => {
   //--hooks
   const router = useRouter();
   const curPath = usePathname();
