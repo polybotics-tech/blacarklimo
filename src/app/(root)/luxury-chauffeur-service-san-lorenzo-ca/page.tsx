@@ -54,106 +54,127 @@ export const metadata: Metadata = {
 };
 
 
-const faqs = [
+const faqs: {
+  question: string;
+  answer: string;
+  subQuestions?: {
+    question: string;
+    answer: string;
+    nested?: {
+      question: string;
+      answer: string;
+    };
+  }[];
+}[] = [
   {
     question: "Who will be my chauffeur?",
     answer:
       "A licensed, insured, professionally dressed chauffeur assigned to your booking in advance.",
-  },
-  {
-    question: "How is that different from a rideshare driver?",
-    answer:
-      "Booked for you, not app-matched. Plans the route, waits if you're delayed, and helps with bags.",
-  },
-  {
-    question: "Same chauffeur all day?",
-    answer:
-      "Yes. One chauffeur and vehicle stay with you for the full hourly booking.",
+    subQuestions: [
+      {
+        question: "How is that different from a rideshare driver?",
+        answer:
+          "Booked for you, not app-matched. Plans the route, waits if you're delayed, and helps with bags.",
+        nested: {
+          question: "Same chauffeur all day?",
+          answer:
+            "Yes. One chauffeur and vehicle stay with you for the full hourly booking.",
+        },
+      },
+    ],
   },
   {
     question: "How many passengers fit?",
     answer:
       "Sedan up to 3, SUV up to 6, stretch limousine up to 10, Sprinter van up to 14.",
-  },
-  {
-    question: "Family of four flying out of SFO?",
-    answer:
-      "Book the SUV. A sedan seats four, but luggage space runs out fast.",
-  },
-  {
-    question: "Child seats available?",
-    answer:
-      "Yes, on request. Tell us ages when you book.",
-  },
-  {
-    question: "Group over 14?",
-    answer:
-      "We run multiple vehicles on the same schedule.",
+    subQuestions: [
+      {
+        question: "Family of four flying out of SFO?",
+        answer:
+          "Book the SUV. A sedan seats four, but luggage space runs out fast.",
+        nested: {
+          question: "Child seats available?",
+          answer:
+            "Yes, on request. Tell us ages when you book.",
+        },
+      },
+      {
+        question: "Group over 14?",
+        answer:
+          "We run multiple vehicles on the same schedule.",
+      },
+    ],
   },
   {
     question: "Who books this service?",
     answer:
       "Business travelers, airport passengers, companies moving clients, and people booking weddings, proms, concerts, and events.",
-  },
-  {
-    question: "Corporate accounts available?",
-    answer:
-      "Yes — recurring bookings and one consolidated bill.",
-  },
-  {
-    question: "Is the ride private?",
-    answer:
-      "Yes. What's discussed in the car stays there.",
-  },
-  {
-    question: "Weddings and proms?",
-    answer:
-      "Yes. Book several weeks ahead for those dates.",
+    subQuestions: [
+      {
+        question: "Corporate accounts available?",
+        answer:
+          "Yes — recurring bookings and one consolidated bill.",
+        nested: {
+          question: "Is the ride private?",
+          answer:
+            "Yes. What's discussed in the car stays there.",
+        },
+      },
+      {
+        question: "Weddings and proms?",
+        answer:
+          "Yes. Book several weeks ahead for those dates.",
+      },
+    ],
   },
   {
     question: "How do trips to the airport work?",
     answer:
       "We cover SFO, OAK, and SJC. OAK is closest to San Lorenzo; SFO is over the San Mateo Bridge.",
-  },
-  {
-    question: "What time will you pick me up?",
-    answer:
-      "We set it based on your flight time and real traffic, not a best-case guess.",
-  },
-  {
-    question: "Flight lands late?",
-    answer:
-      "Send your flight number, and we'll adjust the pickup.",
-  },
-  {
-    question: "Where do we meet?",
-    answer:
-      "Curbside or a meet-and-greet inside — your choice.",
+    subQuestions: [
+      {
+        question: "What time will you pick me up?",
+        answer:
+          "We set it based on your flight time and real traffic, not a best-case guess.",
+        nested: {
+          question: "Flight lands late?",
+          answer:
+            "Send your flight number, and we'll adjust the pickup.",
+        },
+      },
+      {
+        question: "Where do we meet?",
+        answer:
+          "Curbside or a meet-and-greet inside — your choice.",
+      },
+    ],
   },
   {
     question: "What does it cost?",
     answer:
       "Depends on vehicle, distance, and time of day. Airport runs are usually a flat rate; events are hourly. You get the quote before you confirm.",
-  },
-  {
-    question: "Hourly or per trip?",
-    answer:
-      "Point-to-point for transfers, hourly if the car waits between stops.",
-  },
-  {
-    question: "Hourly minimum?",
-    answer:
-      "Yes, and it varies by vehicle and date. We'll tell you upfront.",
-  },
-  {
-    question: "Tipping?",
-    answer:
-      "Appreciated, never required. We'll say whether gratuity is already in your quote.",
-  },
-  {
-    question: "How far ahead to book?",
-    answer:
-      "24–48 hours for most trips. Same-day is fine if a vehicle is free.",
+    subQuestions: [
+      {
+        question: "Hourly or per trip?",
+        answer:
+          "Point-to-point for transfers, hourly if the car waits between stops.",
+        nested: {
+          question: "Hourly minimum?",
+          answer:
+            "Yes, and it varies by vehicle and date. We'll tell you upfront.",
+        },
+      },
+      {
+        question: "Tipping?",
+        answer:
+          "Appreciated, never required. We'll say whether gratuity is already in your quote.",
+      },
+      {
+        question: "How far ahead to book?",
+        answer:
+          "24–48 hours for most trips. Same-day is fine if a vehicle is free.",
+      },
+    ],
   },
 ];
 
@@ -165,7 +186,15 @@ const faqSchema = {
     name: faq.question,
     acceptedAnswer: {
       "@type": "Answer",
-      text: faq.answer,
+      text: [
+        faq.answer,
+        ...(faq.subQuestions || []).flatMap((sub) => [
+          `${sub.question}: ${sub.answer}`,
+          ...(sub.nested
+            ? [`${sub.nested.question}: ${sub.nested.answer}`]
+            : []),
+        ]),
+      ].join(" "),
     },
   })),
 };
@@ -199,7 +228,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
 
               <div className="hero-buttons">
                 <a
-                  href="mailto:blacarklimo@gmail.com?subject=Free%20Quote%20-%20San%20Lorenzo%20Chauffeur%20Service"
+                  href="mailto:blacarklimo@gmail.com"
                   className="btn btn-primary"
                 >
                   Get Your Free Quote
@@ -252,7 +281,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
               </p>
 
               <a
-                href="mailto:blacarklimo@gmail.com?subject=Free%20Quote%20Request"
+                href="mailto:blacarklimo@gmail.com"
                 className="text-cta"
               >
                 CTA: Get Your Free Quote →
@@ -308,7 +337,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
             </p>
 
             <a
-              href="mailto:blacarklimo@gmail.com?subject=Book%20My%20San%20Lorenzo%20Chauffeur"
+              href="mailto:blacarklimo@gmail.com"
               className="text-cta"
             >
               CTA: Book Your Chauffeur Now →
@@ -778,107 +807,25 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
                   <div className="faq-answer">
                     <p>{faq.answer}</p>
 
-                    {faq.question === "How is that different from a rideshare driver?" && (
-                      <ul>
+                    {faq.subQuestions?.map((sub) => (
+                      <ul key={sub.question}>
                         <li>
-                          <strong>Same chauffeur all day?</strong>
+                          <strong>{sub.question}</strong>
                           <br />
-                          Yes. One chauffeur and vehicle stay with you for the
-                          full hourly booking.
-                        </li>
-                      </ul>
-                    )}
+                          {sub.answer}
 
-                    {faq.question === "How many passengers fit?" && (
-                      <ul>
-                        <li>
-                          <strong>Family of four flying out of SFO?</strong>
-                          <br />
-                          Book the SUV. A sedan seats four, but luggage space
-                          runs out fast.
-                        </li>
-                        <li>
-                          <strong>Child seats available?</strong>
-                          <br />
-                          Yes, on request. Tell us ages when you book.
-                        </li>
-                        <li>
-                          <strong>Group over 14?</strong>
-                          <br />
-                          We run multiple vehicles on the same schedule.
+                          {sub.nested && (
+                            <ul>
+                              <li>
+                                <strong>{sub.nested.question}</strong>
+                                <br />
+                                {sub.nested.answer}
+                              </li>
+                            </ul>
+                          )}
                         </li>
                       </ul>
-                    )}
-
-                    {faq.question === "Who books this service?" && (
-                      <ul>
-                        <li>
-                          <strong>Corporate accounts available?</strong>
-                          <br />
-                          Yes — recurring bookings and one consolidated bill.
-                        </li>
-                        <li>
-                          <strong>Is the ride private?</strong>
-                          <br />
-                          Yes. What's discussed in the car stays there.
-                        </li>
-                        <li>
-                          <strong>Weddings and proms?</strong>
-                          <br />
-                          Yes. Book several weeks ahead for those dates.
-                        </li>
-                      </ul>
-                    )}
-
-                    {faq.question === "How do trips to the airport work?" && (
-                      <ul>
-                        <li>
-                          <strong>What time will you pick me up?</strong>
-                          <br />
-                          We set it based on your flight time and real traffic,
-                          not a best-case guess.
-                        </li>
-                        <li>
-                          <strong>Flight lands late?</strong>
-                          <br />
-                          Send your flight number, and we'll adjust the pickup.
-                        </li>
-                        <li>
-                          <strong>Where do we meet?</strong>
-                          <br />
-                          Curbside or a meet-and-greet inside — your choice.
-                        </li>
-                      </ul>
-                    )}
-
-                    {faq.question === "What does it cost?" && (
-                      <ul>
-                        <li>
-                          <strong>Hourly or per trip?</strong>
-                          <br />
-                          Point-to-point for transfers, hourly if the car waits
-                          between stops.
-                        </li>
-                        <li>
-                          <strong>Hourly minimum?</strong>
-                          <br />
-                          Yes, and it varies by vehicle and date. We'll tell
-                          you upfront.
-                        </li>
-                        <li>
-                          <strong>Tipping?</strong>
-                          <br />
-                          Appreciated, never required. We'll say whether
-                          gratuity is already in your quote.
-                        </li>
-                        <li>
-                          <strong>How far ahead to book?</strong>
-                          <br />
-                          24–48 hours for most trips. Same-day is fine if a
-                          vehicle is free.
-                        </li>
-                      </ul>
-                    )}
+                    ))}
                   </div>
                 </details>
               ))}
@@ -1074,9 +1021,9 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
           color: var(--black);
         }
 
-        p {
-          margin: 0 0 20px;
-        }
+        // p {
+        //   margin: 0 0 20px;
+        // }
 
         .two-column {
           display: grid;
@@ -1109,7 +1056,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
           color: #111;
           background: var(--gold);
           padding: 11px 18px;
-          margin-top: 8px;
+          margin-top: 20px;
           font-size: 14px;
           font-weight: 800;
           text-decoration: none;
