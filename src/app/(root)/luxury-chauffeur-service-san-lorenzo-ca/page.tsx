@@ -284,7 +284,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
                 href="mailto:blacarklimo@gmail.com"
                 className="text-cta"
               >
-                CTA: Get Your Free Quote →
+                Get Your Free Quote →
               </a>
             </div>
 
@@ -340,7 +340,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
               href="mailto:blacarklimo@gmail.com"
               className="text-cta"
             >
-              CTA: Book Your Chauffeur Now →
+             Book Your Chauffeur Now →
             </a>
           </div>
         </section>
@@ -385,7 +385,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
                 href="mailto:blacarklimo@gmail.com"
                 className="text-cta"
               >
-                CTA: Reserve Your Airport Transfer →
+               Reserve Your Airport Transfer →
               </a>
             </div>
           </div>
@@ -515,7 +515,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
                 href="/fleet"
                 className="text-cta"
               >
-                CTA: View Our Fleet →
+                View Our Fleet →
               </a>
             </div>
 
@@ -776,7 +776,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
               href="mailto:blacarklimo@gmail.com"
               className="corporate-link"
             >
-              CTA: Open a Corporate Account →
+             Open a Corporate Account →
             </a>
           </div>
         </section>
