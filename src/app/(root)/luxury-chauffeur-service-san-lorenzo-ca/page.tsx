@@ -850,678 +850,766 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
       </main>
 
       <style>{`
-        .san-lorenzo-page {
-          --black: #080808;
-          --dark: #111111;
-          --gold: #c9a45c;
-          --gold-light: #e4c77d;
-          --cream: #f7f5ef;
-          --white: #ffffff;
-          --text: #202020;
-          --muted: #666666;
-          --border: #e4e1d9;
-          color: var(--text);
-          background: #fff;
-          font-family: Arial, Helvetica, sans-serif;
-          line-height: 1.7;
-        }
-
-        .san-lorenzo-page * {
-          box-sizing: border-box;
-        }
-
-        .container {
-          width: min(1180px, calc(100% - 40px));
-          margin: 0 auto;
-        }
-
-        .hero {
-          min-height: 690px;
-          position: relative;
-          display: flex;
-          align-items: center;
-          overflow: hidden;
-          background:
-            linear-gradient(90deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.68) 45%, rgba(0,0,0,.25) 100%),
-            url("https://www.blacarklimo.com/assets/images/unnamed (8).jpg")
-            center/cover no-repeat;
-        }
-
-        .hero-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            135deg,
-            rgba(0,0,0,.65),
-            rgba(0,0,0,.2)
-          );
-        }
-
-        .hero-content {
-          position: relative;
-          z-index: 2;
-          padding: 100px 0;
-        }
-
-        .hero-copy {
-          max-width: 760px;
-          color: #fff;
-        }
-
-        .eyebrow,
-        .section-label {
-          display: inline-block;
-          color: var(--gold);
-          font-size: 12px;
-          font-weight: 700;
-          letter-spacing: 2.5px;
-          margin-bottom: 14px;
-        }
-
-        .hero h1 {
-          font-size: clamp(42px, 6vw, 76px);
-          line-height: 1.04;
-          letter-spacing: -2px;
-          margin: 0 0 24px;
-          max-width: 850px;
-        }
-
-        .hero-intro {
-          max-width: 680px;
-          font-size: 19px;
-          color: rgba(255,255,255,.88);
-          margin-bottom: 34px;
-        }
-
-        .hero-buttons {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 14px;
-          margin: 25px 0;
-        }
-
-        .btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          min-height: 52px;
-          padding: 0 25px;
-          text-decoration: none;
-          font-size: 14px;
-          font-weight: 700;
-          letter-spacing: .3px;
-          border-radius: 2px;
-          transition: .25s ease;
-        }
-
-        .btn-primary {
-          color: #111;
-          background: var(--gold);
-          border: 1px solid var(--gold);
-        }
-
-        .btn-primary:hover {
-          background: var(--gold-light);
-          border-color: var(--gold-light);
-          transform: translateY(-2px);
-        }
-
-        .btn-outline {
-          color: #fff;
-          background: transparent;
-          border: 1px solid rgba(255,255,255,.65);
-        }
-
-        .btn-outline:hover {
-          background: #fff;
-          color: #111;
-          transform: translateY(-2px);
-        }
-
-        .hero-trust {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 22px;
-          margin-top: 35px;
-          color: rgba(255,255,255,.8);
-          font-size: 13px;
-        }
-
-        .section {
-          padding: 100px 0;
-        }
-
-        .section-light {
-          background: var(--cream);
-        }
-
-        .section-heading {
-          max-width: 850px;
-          margin-bottom: 45px;
-        }
-
-        .section-heading.center {
-          margin-left: auto;
-          margin-right: auto;
-          text-align: center;
-        }
-
-        h2 {
-          font-size: clamp(32px, 4vw, 50px);
-          line-height: 1.12;
-          letter-spacing: -1px;
-          margin: 0 0 22px;
-          color: var(--black);
-        }
-
-        h3 {
-          font-size: 22px;
-          line-height: 1.25;
-          margin: 0 0 15px;
-          color: var(--black);
-        }
-
-        // p {
-        //   margin: 0 0 20px;
-        // }
-
-        .two-column {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 70px;
-          align-items: center;
-        }
-
-        .image-card {
-          overflow: hidden;
-          min-height: 470px;
-          background: #ddd;
-        }
-
-        .image-card.tall {
-          min-height: 620px;
-        }
-
-        .image-card img,
-        .corporate-image img {
-          width: 100%;
-          height: 100%;
-          min-height: inherit;
-          display: block;
-          object-fit: cover;
-        }
-
-        .text-cta {
-          display: inline-flex;
-          color: #111;
-          background: var(--gold);
-          padding: 11px 18px;
-          margin-top: 20px;
-          font-size: 14px;
-          font-weight: 800;
-          text-decoration: none;
-          transition: .25s ease;
-        }
-
-        .text-cta:hover {
-          background: var(--gold-light);
-          transform: translateY(-2px);
-        }
-
-        .feature-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 0;
-          border-top: 1px solid var(--border);
-          margin: 30px 0 30px;
-        }
-
-        .feature-grid.two {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        .feature-item {
-          display: flex;
-          gap: 13px;
-          align-items: flex-start;
-          padding: 19px 20px 19px 0;
-          border-bottom: 1px solid var(--border);
-          font-size: 15px;
-        }
-
-        .check {
-          flex: 0 0 25px;
-          width: 25px;
-          height: 25px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          background: var(--gold);
-          color: #111;
-          border-radius: 50%;
-          font-size: 13px;
-          font-weight: 900;
-        }
-
-        .wide-copy {
-          max-width: 980px;
-        }
-
-        .styled-list {
-          margin: 20px 0 25px;
-          padding-left: 21px;
-        }
-
-        .styled-list li {
-          margin: 9px 0;
-          padding-left: 5px;
-        }
-
-        .service-detail {
-          margin-top: 90px;
-        }
-
-        .dark-section {
-          color: rgba(255,255,255,.82);
-          background: var(--dark);
-        }
-
-        .dark-section h2,
-        .dark-section h3 {
-          color: #fff;
-        }
-
-        .section-heading.light p {
-          color: rgba(255,255,255,.75);
-        }
-
-        .corporate-layout {
-          display: grid;
-          grid-template-columns: .9fr 1.1fr;
-          gap: 65px;
-          align-items: center;
-        }
-
-        .corporate-image {
-          min-height: 500px;
-          overflow: hidden;
-        }
-
-        .light-list {
-          color: rgba(255,255,255,.86);
-        }
-
-        .light-list li::marker {
-          color: var(--gold);
-        }
-
-        .reverse-mobile {
-          direction: ltr;
-        }
-
-        .reverse-mobile > * {
-          direction: ltr;
-        }
-
-        .table-wrap {
-          overflow-x: auto;
-          border: 1px solid #cfcac0;
-          background: #fff;
-        }
-
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          min-width: 760px;
-        }
-
-        th,
-        td {
-          text-align: left;
-          padding: 17px 18px;
-          border-bottom: 1px solid #d9d5cc;
-          border-right: 1px solid #d9d5cc;
-          vertical-align: top;
-          font-size: 14px;
-        }
-
-        th {
-          background: #171717;
-          color: #fff;
-          font-weight: 700;
-          letter-spacing: .4px;
-        }
-
-        tr:last-child td {
-          border-bottom: 0;
-        }
-
-        td:last-child,
-        th:last-child {
-          border-right: 0;
-        }
-
-        .fleet-note {
-          margin: 25px 0 0;
-          color: var(--muted);
-          font-style: italic;
-        }
-
-        .why-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 18px;
-        }
-
-        .why-card {
-          display: flex;
-          gap: 20px;
-          padding: 28px;
-          background: #fff;
-          border: 1px solid var(--border);
-        }
-
-        .why-card p {
-          margin: 0;
-        }
-
-        .number {
-          color: var(--gold);
-          font-size: 14px;
-          font-weight: 800;
-          letter-spacing: 1px;
-        }
-
-        .steps {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 20px;
-        }
-
-        .step {
-          position: relative;
-          padding: 32px;
-          min-height: 245px;
-          border: 1px solid var(--border);
-          background: #fff;
-        }
-
-        .step-number {
-          display: block;
-          color: var(--gold);
-          font-size: 13px;
-          font-weight: 800;
-          letter-spacing: 2px;
-          margin-bottom: 35px;
-        }
-
-        .step p {
-          color: var(--muted);
-          font-size: 14px;
-        }
-
-        .booking-note {
-          max-width: 900px;
-          margin: 35px auto 0;
-          padding: 25px 30px;
-          background: var(--cream);
-          border-left: 3px solid var(--gold);
-        }
-
-        .booking-note p {
-          margin: 0;
-        }
-
-        .final-cta {
-          position: relative;
-          overflow: hidden;
-          min-height: 650px;
-          display: flex;
-          align-items: center;
-          color: #fff;
-          background: #090909;
-        }
-
-        .final-cta-image {
-          position: absolute;
-          inset: 0;
-          background:
-            linear-gradient(90deg, rgba(0,0,0,.9), rgba(0,0,0,.5)),
-            url("https://www.blacarklimo.com/assets/images/unnamed (8).jpg")
-            center/cover no-repeat;
-        }
-
-        .final-cta-content {
-          position: relative;
-          z-index: 2;
-          max-width: 900px;
-          padding-top: 90px;
-          padding-bottom: 90px;
-        }
-
-        .final-cta h2 {
-          color: #fff;
-          max-width: 780px;
-        }
-
-        .final-cta p {
-          max-width: 760px;
-          color: rgba(255,255,255,.82);
-          font-size: 18px;
-        }
-
-        .final-cta .strong {
-          color: #fff;
-          font-weight: 700;
-        }
-
-        .light-label {
-          color: var(--gold-light);
-        }
-
-        .corporate-link {
-          display: inline-block;
-          margin-top: 12px;
-          color: var(--gold-light);
-          font-weight: 700;
-          text-decoration: underline;
-        }
-
-        .faq-section {
-          background: #fff;
-        }
-
-        .faq-container {
-          max-width: 1000px;
-        }
-
-        .faq-list {
-          border-top: 1px solid var(--border);
-        }
-
-        .faq-item {
-          border-bottom: 1px solid var(--border);
-        }
-
-        .faq-item summary {
-          cursor: pointer;
-          list-style: none;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 25px;
-          padding: 24px 0;
-          font-size: 17px;
-          font-weight: 700;
-          color: var(--black);
-        }
-
-        .faq-item summary::-webkit-details-marker {
-          display: none;
-        }
-
-        .faq-plus {
-          flex: 0 0 30px;
-          width: 30px;
-          height: 30px;
-          border: 1px solid var(--gold);
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--gold);
-          font-size: 22px;
-          font-weight: 400;
-        }
-
-        .faq-item[open] .faq-plus {
-          transform: rotate(45deg);
-        }
-
-        .faq-answer {
-          padding: 0 55px 25px 0;
-          color: var(--muted);
-        }
-
-        .faq-answer ul {
-          margin: 15px 0 0;
-          padding-left: 20px;
-        }
-
-        .faq-answer li {
-          margin: 13px 0;
-        }
-
-        .faq-cta {
-          margin-top: 65px;
-          padding: 50px;
-          background: var(--dark);
-          color: #fff;
-          text-align: center;
-        }
-
-        .faq-cta h3 {
-          color: #fff;
-          font-size: 30px;
-        }
-
-        .faq-cta p {
-          max-width: 650px;
-          margin: 0 auto 25px;
-          color: rgba(255,255,255,.75);
-        }
-
-        @media (max-width: 900px) {
-          .hero {
-            min-height: 620px;
-          }
-
-          .two-column,
-          .corporate-layout {
-            grid-template-columns: 1fr;
-            gap: 45px;
-          }
-
-          .feature-grid,
-          .feature-grid.two,
-          .why-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .steps {
-            grid-template-columns: repeat(2, 1fr);
-          }
-
-          .image-card,
-          .image-card.tall,
-          .corporate-image {
-            min-height: 420px;
-          }
-        }
-
-        @media (max-width: 600px) {
-          .container {
-            width: min(100% - 28px, 1180px);
-          }
-
-          .section {
-            padding: 70px 0;
-          }
-
-          .hero {
-            min-height: 680px;
-            background-position: 65% center;
-          }
-
-          .hero-content {
-            padding: 80px 0;
-          }
-
-          .hero h1 {
-            font-size: 42px;
-            letter-spacing: -1.5px;
-          }
-
-          .hero-intro {
-            font-size: 16px;
-          }
-
-          .hero-buttons {
-            flex-direction: column;
-            align-items: stretch;
-          }
-
-          .btn {
-            width: 100%;
-          }
-
-          .hero-trust {
-            display: grid;
-            gap: 9px;
-          }
-
-          h2 {
-            font-size: 34px;
-          }
-
-          .feature-item {
-            padding-right: 0;
-          }
-
-          .steps {
-            grid-template-columns: 1fr;
-          }
-
-          .step {
-            min-height: auto;
-          }
-
-          .why-card {
-            padding: 22px;
-          }
-
-          .faq-cta {
-            padding: 35px 22px;
-          }
-
-          .faq-answer {
-            padding-right: 0;
-          }
-
-          .faq-item summary {
-            font-size: 15px;
-          }
-
-          .image-card,
-          .image-card.tall,
-          .corporate-image {
-            min-height: 320px;
-          }
-
-          .final-cta {
-            min-height: 650px;
-          }
-        }
-      `}</style>
-    </>
+  .san-lorenzo-page {
+    --black: #09090b;
+    --dark: #151518;
+    --dark-card: #18181b;
+    --gold: #d4b32f;
+    --gold-light: #e7c943;
+    --cream: #101012;
+    --white: #f7f7f7;
+    --text: #f2f2f2;
+    --muted: #b7b7bb;
+    --border: #2b2b2f;
+
+    color: var(--text);
+    background: var(--black);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .san-lorenzo-page * {
+    box-sizing: border-box;
+  }
+
+  .san-lorenzo-page .container {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+  }
+
+  /* HERO */
+  .san-lorenzo-page .hero {
+    min-height: 620px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(5, 5, 6, .94) 0%,
+        rgba(5, 5, 6, .78) 48%,
+        rgba(5, 5, 6, .35) 100%
+      ),
+      url("https://www.blacarklimo.com/assets/images/unnamed (8).jpg")
+      center/cover no-repeat;
+  }
+
+  .san-lorenzo-page .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, .48),
+      rgba(0, 0, 0, .1)
+    );
+  }
+
+  .san-lorenzo-page .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 90px 0;
+  }
+
+  .san-lorenzo-page .hero-copy {
+    max-width: 760px;
+    color: var(--white);
+  }
+
+  .san-lorenzo-page .eyebrow,
+  .san-lorenzo-page .section-label {
+    display: inline-block;
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .san-lorenzo-page .hero h1 {
+    max-width: 820px;
+    margin: 0 0 20px;
+    color: var(--white);
+    font-size: clamp(36px, 4.5vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -1.5px;
+    font-weight: 700;
+  }
+
+  .san-lorenzo-page .hero-intro {
+    max-width: 650px;
+    margin: 0 0 26px;
+    color: #dedee1;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .san-lorenzo-page .hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 22px 0;
+  }
+
+  .san-lorenzo-page .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 22px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1px;
+    text-decoration: none;
+    transition: .25s ease;
+  }
+
+  .san-lorenzo-page .btn-primary {
+    color: #111;
+    background: var(--gold);
+    border: 1px solid var(--gold);
+  }
+
+  .san-lorenzo-page .btn-primary:hover {
+    background: var(--gold-light);
+    border-color: var(--gold-light);
+    transform: translateY(-2px);
+  }
+
+  .san-lorenzo-page .btn-outline {
+    color: var(--white);
+    background: transparent;
+    border: 1px solid #77777b;
+  }
+
+  .san-lorenzo-page .btn-outline:hover {
+    color: #111;
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .san-lorenzo-page .hero-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 28px;
+    color: #d0d0d3;
+    font-size: 12px;
+  }
+
+  /* SECTION BASE */
+  .san-lorenzo-page .section {
+    padding: 78px 0;
+    background: var(--black);
+    color: var(--text);
+  }
+
+  .san-lorenzo-page .section-light {
+    background: #101012;
+  }
+
+  .san-lorenzo-page .section-heading {
+    max-width: 820px;
+    margin-bottom: 34px;
+  }
+
+  .san-lorenzo-page .section-heading.center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .san-lorenzo-page h2 {
+    margin: 0 0 18px;
+    color: var(--white);
+    font-size: clamp(28px, 3.3vw, 42px);
+    line-height: 1.15;
+    letter-spacing: -.7px;
+    font-weight: 700;
+  }
+
+  .san-lorenzo-page h3 {
+    margin: 0 0 13px;
+    color: var(--white);
+    font-size: 20px;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+
+  .san-lorenzo-page p {
+    margin: 0 0 16px;
+    color: #c1c1c5;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .san-lorenzo-page .two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 55px;
+    align-items: center;
+  }
+
+  /* IMAGES */
+  .san-lorenzo-page .image-card {
+    min-height: 420px;
+    overflow: hidden;
+    background: #19191c;
+    border: 1px solid #2b2b2f;
+    border-radius: 10px;
+  }
+
+  .san-lorenzo-page .image-card.tall {
+    min-height: 540px;
+  }
+
+  .san-lorenzo-page .image-card img,
+  .san-lorenzo-page .corporate-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    object-fit: cover;
+  }
+
+  /* TEXT LINKS / BUTTONS */
+  .san-lorenzo-page .text-cta {
+    display: inline-flex;
+    margin-top: 16px;
+    padding: 11px 17px;
+    color: #111;
+    background: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: .25s ease;
+  }
+
+  .san-lorenzo-page .text-cta:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+  }
+
+  /* FEATURE LISTS */
+  .san-lorenzo-page .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 18px;
+    margin: 26px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .san-lorenzo-page .feature-grid.two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .san-lorenzo-page .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 15px 8px 15px 0;
+    color: #dedee1;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .san-lorenzo-page .check {
+    flex: 0 0 21px;
+    width: 21px;
+    height: 21px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    background: var(--gold);
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  .san-lorenzo-page .wide-copy {
+    max-width: 950px;
+  }
+
+  .san-lorenzo-page .styled-list {
+    margin: 18px 0 22px;
+    padding-left: 20px;
+    color: #d2d2d5;
+  }
+
+  .san-lorenzo-page .styled-list li {
+    margin: 8px 0;
+    padding-left: 4px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .san-lorenzo-page .styled-list li::marker {
+    color: var(--gold);
+  }
+
+  .san-lorenzo-page .service-detail {
+    margin-top: 65px;
+  }
+
+  /* CORPORATE SECTION */
+  .san-lorenzo-page .dark-section {
+    color: #d4d4d7;
+    background: #151518;
+  }
+
+  .san-lorenzo-page .dark-section h2,
+  .san-lorenzo-page .dark-section h3 {
+    color: var(--white);
+  }
+
+  .san-lorenzo-page .section-heading.light p {
+    color: #c1c1c5;
+  }
+
+  .san-lorenzo-page .corporate-layout {
+    display: grid;
+    grid-template-columns: .9fr 1.1fr;
+    gap: 50px;
+    align-items: center;
+  }
+
+  .san-lorenzo-page .corporate-image {
+    min-height: 440px;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+
+  .san-lorenzo-page .light-list {
+    color: #dedee1;
+  }
+
+  .san-lorenzo-page .reverse-mobile {
+    direction: ltr;
+  }
+
+  .san-lorenzo-page .reverse-mobile > * {
+    direction: ltr;
+  }
+
+  /* VEHICLE TABLE */
+  .san-lorenzo-page .table-wrap {
+    overflow-x: auto;
+    background: #151518;
+    border: 1px solid #303034;
+    border-radius: 8px;
+  }
+
+  .san-lorenzo-page table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+  }
+
+  .san-lorenzo-page th,
+  .san-lorenzo-page td {
+    padding: 14px 16px;
+    color: #d9d9dc;
+    border-bottom: 1px solid #303034;
+    border-right: 1px solid #303034;
+    text-align: left;
+    vertical-align: top;
+    font-size: 13px;
+  }
+
+  .san-lorenzo-page th {
+    color: #111;
+    background: var(--gold);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .san-lorenzo-page tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .san-lorenzo-page td:last-child,
+  .san-lorenzo-page th:last-child {
+    border-right: 0;
+  }
+
+  .san-lorenzo-page .fleet-note {
+    margin: 20px 0 0;
+    color: #aaaab0;
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  /* WHY CHOOSE US */
+  .san-lorenzo-page .why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .san-lorenzo-page .why-card {
+    display: flex;
+    gap: 16px;
+    padding: 22px;
+    background: var(--dark-card);
+    border: 1px solid #29292d;
+    border-radius: 8px;
+  }
+
+  .san-lorenzo-page .why-card p {
+    margin: 0;
+    color: #d6d6d9;
+    font-size: 13px;
+  }
+
+  .san-lorenzo-page .number {
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+
+  /* BOOKING STEPS */
+  .san-lorenzo-page .steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .san-lorenzo-page .step {
+    min-height: 220px;
+    padding: 24px;
+    background: var(--dark-card);
+    border: 1px solid #2b2b2f;
+    border-radius: 8px;
+  }
+
+  .san-lorenzo-page .step-number {
+    display: block;
+    margin-bottom: 25px;
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+  }
+
+  .san-lorenzo-page .step h3 {
+    font-size: 17px;
+  }
+
+  .san-lorenzo-page .step p {
+    color: #bdbdc2;
+    font-size: 13px;
+  }
+
+  .san-lorenzo-page .booking-note {
+    max-width: 900px;
+    margin: 28px auto 0;
+    padding: 22px 25px;
+    background: #171719;
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+  }
+
+  .san-lorenzo-page .booking-note p {
+    margin: 0;
+    font-size: 13px;
+  }
+
+  /* FINAL CTA */
+  .san-lorenzo-page .final-cta {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 570px;
+    overflow: hidden;
+    color: var(--white);
+    background: #09090b;
+  }
+
+  .san-lorenzo-page .final-cta-image {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(5, 5, 6, .94),
+        rgba(5, 5, 6, .68)
+      ),
+      url("https://www.blacarklimo.com/assets/images/unnamed (8).jpg")
+      center/cover no-repeat;
+  }
+
+  .san-lorenzo-page .final-cta-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    padding-top: 75px;
+    padding-bottom: 75px;
+  }
+
+  .san-lorenzo-page .final-cta h2 {
+    max-width: 760px;
+    color: var(--white);
+  }
+
+  .san-lorenzo-page .final-cta p {
+    max-width: 740px;
+    color: #d0d0d3;
+    font-size: 14px;
+  }
+
+  .san-lorenzo-page .final-cta .strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .san-lorenzo-page .light-label {
+    color: var(--gold);
+  }
+
+  .san-lorenzo-page .corporate-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--gold);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  /* FAQ */
+  .san-lorenzo-page .faq-section {
+    background: var(--black);
+  }
+
+  .san-lorenzo-page .faq-container {
+    max-width: 1000px;
+  }
+
+  .san-lorenzo-page .faq-list {
+    border-top: 1px solid var(--border);
+  }
+
+  .san-lorenzo-page .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .san-lorenzo-page .faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    padding: 20px 0;
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .san-lorenzo-page .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .san-lorenzo-page .faq-plus {
+    flex: 0 0 28px;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .san-lorenzo-page .faq-item[open] .faq-plus {
+    transform: rotate(45deg);
+  }
+
+  .san-lorenzo-page .faq-answer {
+    padding: 0 45px 22px 0;
+    color: #bdbdc2;
+  }
+
+  .san-lorenzo-page .faq-answer p,
+  .san-lorenzo-page .faq-answer li {
+    color: #bdbdc2;
+    font-size: 13px;
+  }
+
+  .san-lorenzo-page .faq-answer ul {
+    margin: 14px 0 0;
+    padding-left: 20px;
+  }
+
+  .san-lorenzo-page .faq-answer li {
+    margin: 12px 0;
+  }
+
+  .san-lorenzo-page .faq-answer strong {
+    color: var(--white);
+  }
+
+  .san-lorenzo-page .faq-cta {
+    margin-top: 50px;
+    padding: 38px;
+    color: var(--white);
+    background: #171719;
+    border: 1px solid #29292d;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .san-lorenzo-page .faq-cta h3 {
+    color: var(--white);
+    font-size: 24px;
+  }
+
+  .san-lorenzo-page .faq-cta p {
+    max-width: 650px;
+    margin: 0 auto 22px;
+    color: #bdbdc2;
+    font-size: 13px;
+  }
+
+  /* TABLET */
+  @media (max-width: 900px) {
+    .san-lorenzo-page .hero {
+      min-height: 560px;
+    }
+
+    .san-lorenzo-page .two-column,
+    .san-lorenzo-page .corporate-layout {
+      grid-template-columns: 1fr;
+      gap: 35px;
+    }
+
+    .san-lorenzo-page .feature-grid,
+    .san-lorenzo-page .feature-grid.two,
+    .san-lorenzo-page .why-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .san-lorenzo-page .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .san-lorenzo-page .image-card,
+    .san-lorenzo-page .image-card.tall,
+    .san-lorenzo-page .corporate-image {
+      min-height: 380px;
+    }
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .san-lorenzo-page {
+      font-size: 13px;
+    }
+
+    .san-lorenzo-page .container {
+      width: calc(100% - 28px);
+    }
+
+    .san-lorenzo-page .section {
+      padding: 58px 0;
+    }
+
+    .san-lorenzo-page .hero {
+      min-height: 590px;
+      background-position: 65% center;
+    }
+
+    .san-lorenzo-page .hero-content {
+      padding: 65px 0;
+    }
+
+    .san-lorenzo-page .hero h1 {
+      font-size: 36px;
+      line-height: 1.1;
+      letter-spacing: -1px;
+    }
+
+    .san-lorenzo-page .hero-intro {
+      font-size: 14px;
+    }
+
+    .san-lorenzo-page .hero-buttons {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .san-lorenzo-page .btn {
+      width: 100%;
+    }
+
+    .san-lorenzo-page .hero-trust {
+      display: grid;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .san-lorenzo-page h2 {
+      font-size: 29px;
+      line-height: 1.15;
+    }
+
+    .san-lorenzo-page h3 {
+      font-size: 18px;
+    }
+
+    .san-lorenzo-page .feature-item {
+      padding-right: 0;
+      font-size: 12px;
+    }
+
+    .san-lorenzo-page .steps {
+      grid-template-columns: 1fr;
+    }
+
+    .san-lorenzo-page .step {
+      min-height: auto;
+      padding: 22px;
+    }
+
+    .san-lorenzo-page .why-card {
+      padding: 18px;
+    }
+
+    .san-lorenzo-page .faq-cta {
+      padding: 28px 18px;
+    }
+
+    .san-lorenzo-page .faq-answer {
+      padding-right: 0;
+    }
+
+    .san-lorenzo-page .faq-item summary {
+      font-size: 13px;
+    }
+
+    .san-lorenzo-page .image-card,
+    .san-lorenzo-page .image-card.tall,
+    .san-lorenzo-page .corporate-image {
+      min-height: 290px;
+    }
+
+    .san-lorenzo-page .final-cta {
+      min-height: 580px;
+    }
+
+    .san-lorenzo-page .final-cta p {
+      font-size: 13px;
+    }
+  }
+`}</style>    </>
   );
 }
