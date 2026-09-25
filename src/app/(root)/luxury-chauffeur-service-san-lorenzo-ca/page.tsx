@@ -873,10 +873,20 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
     box-sizing: border-box;
   }
 
+ .san-lorenzo-page .container {
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+@media (max-width: 600px) {
   .san-lorenzo-page .container {
-    width: min(1180px, calc(100% - 40px));
-    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
   }
+}
 
   /* HERO */
   .san-lorenzo-page .hero {
