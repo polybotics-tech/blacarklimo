@@ -1620,6 +1620,46 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
       font-size: 13px;
     }
   }
+  /* Keep all San Lorenzo sections aligned to one content width */
+.san-lorenzo-page .container {
+  width: 100%;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+/* Let section headings use the same container width */
+.san-lorenzo-page .section-heading {
+  width: 100%;
+  max-width: none;
+}
+
+/* FAQ should follow the same container alignment */
+.san-lorenzo-page .faq-container {
+  width: 100%;
+  max-width: 1024px;
+}
+
+/* Keep nested service content aligned with the main container */
+.san-lorenzo-page .service-detail {
+  width: 100%;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Mobile spacing */
+@media (max-width: 600px) {
+  .san-lorenzo-page .container,
+  .san-lorenzo-page .faq-container,
+  .san-lorenzo-page .service-detail {
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
 `}</style>    </>
   );
 }
