@@ -337,7 +337,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
             </p>
 
             <a
-              href="mailto:blacarklimo@gmail.com"
+              href="https://www.blacarklimo.com/booking"
               className="text-cta"
             >
              Book Your Chauffeur Now →
@@ -382,7 +382,7 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
               </p>
 
               <a
-                href="mailto:blacarklimo@gmail.com"
+                href="https://www.blacarklimo.com/booking"
                 className="text-cta"
               >
                Reserve Your Airport Transfer →
@@ -772,12 +772,6 @@ export default function LuxuryChauffeurServiceSanLorenzoPage() {
               </a>
             </div>
 
-            <a
-              href="mailto:blacarklimo@gmail.com"
-              className="corporate-link"
-            >
-             Open a Corporate Account →
-            </a>
           </div>
         </section>
 
