@@ -4,7 +4,9 @@ const nextConfig: NextConfig = {
   experimental: {
     turbopackFileSystemCacheForDev: true,
   },
+
   allowedDevOrigins: ["10.230.42.32"],
+
   images: {
     remotePatterns: [
       {
@@ -14,6 +16,16 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+  },
+
+  async redirects() {
+    return [
+      {
+        source: "/luxury-chauffeur-service-san-lorenzo-ca",
+        destination: "/chauffeur-service-san-lorenzo-ca",
+        permanent: true,
+      },
+    ];
   },
 };
 
