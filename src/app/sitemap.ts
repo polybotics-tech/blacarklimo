@@ -19,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
     },
     {
-      url: "https://www.blacarklimo.com/luxury-chauffeur-service-san-lorenzo-ca/",
+      url: "https://www.blacarklimo.com/chauffeur-service-san-lorenzo-ca",
       lastModified: new Date(),
     },
   ];
