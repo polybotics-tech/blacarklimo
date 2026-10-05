@@ -28,7 +28,7 @@ const DefaultNavigation = () => {
   //--variables
   const isBookingPage: boolean = curPath === "/booking";
 
-  const servicePath = "/luxury-chauffeur-service-san-lorenzo-ca/";
+  const servicePath = "/chauffeur-service-san-lorenzo-ca/";
 
   const navigationPaths: { name: string; url: string }[] = [
     { name: "Home", url: "/" },
