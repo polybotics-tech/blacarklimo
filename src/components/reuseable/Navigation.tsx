@@ -28,7 +28,12 @@ const DefaultNavigation = () => {
   //--variables
   const isBookingPage: boolean = curPath === "/booking";
 
+  // Existing San Lorenzo service
   const servicePath = "/chauffeur-service-san-lorenzo-ca/";
+
+  // New Airport Chauffeur service
+  const airportServicePath =
+    "/airport-chauffeur-service-san-lorenzo-ca/";
 
   const navigationPaths: { name: string; url: string }[] = [
     { name: "Home", url: "/" },
@@ -36,12 +41,19 @@ const DefaultNavigation = () => {
     { name: "Our Fleet", url: "/fleet" },
   ];
 
-  const isServicesActive = curPath === servicePath;
+  // Services active state
+  const isServicesActive =
+    curPath === servicePath ||
+    curPath === airportServicePath;
+
+  const isAirportServiceActive =
+    curPath === airportServicePath;
 
   return (
     <>
       <nav className="w-full sticky top-0 left-0 z-50 bg-pri-bg/70 backdrop-blur-sm">
         <div className="w-full max-w-5xl mx-auto py-4 md:py-2 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+
           {/* LOGO */}
           <Link href={"/"}>
             <div className="flex items-center gap-1">
@@ -55,7 +67,8 @@ const DefaultNavigation = () => {
               </div>
 
               <p className="log-text">
-                Blacark<span className="text-sec-gold">limo</span>
+                Blacark
+                <span className="text-sec-gold">limo</span>
               </p>
             </div>
           </Link>
@@ -105,19 +118,34 @@ const DefaultNavigation = () => {
                 />
               </button>
 
-              {/* DROPDOWN */}
+              {/* DESKTOP DROPDOWN */}
               <div className="absolute left-0 top-full pt-3 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
                 <div className="w-72 rounded-lg bg-pri-bg border border-dim-text/30 shadow-xl overflow-hidden">
+
+                  {/* SAN LORENZO CA */}
                   <Link
                     href={servicePath}
                     className={`block px-4 py-3 text-sm hover:bg-sec-bg hover:text-sec-gold transition-colors ${
-                      isServicesActive
+                      curPath === servicePath
                         ? "text-sec-gold"
                         : "text-sec-text"
                     }`}
                   >
-                   San Lorenzo CA
+                    San Lorenzo CA
                   </Link>
+
+                  {/* AIRPORT CHAUFFEUR */}
+                  <Link
+                    href={airportServicePath}
+                    className={`block px-4 py-3 text-sm hover:bg-sec-bg hover:text-sec-gold transition-colors ${
+                      isAirportServiceActive
+                        ? "text-sec-gold"
+                        : "text-sec-text"
+                    }`}
+                  >
+                    Airport Chauffeur
+                  </Link>
+
                 </div>
               </div>
             </li>
@@ -153,7 +181,9 @@ const DefaultNavigation = () => {
           {/* MOBILE NAVIGATION BUTTON */}
           <button
             className="w-6 h-6 sm:hidden"
-            onClick={() => setIsMobileNavOpen((prev) => !prev)}
+            onClick={() =>
+              setIsMobileNavOpen((prev) => !prev)
+            }
           >
             {isMobileNavOpen ? (
               <X
@@ -174,10 +204,14 @@ const DefaultNavigation = () => {
         {/* MOBILE NAV BAR */}
         <div
           className={`sm:hidden w-full ${
-            isMobileNavOpen ? "max-h-[500px]" : "max-h-0"
+            isMobileNavOpen
+              ? "max-h-[500px]"
+              : "max-h-0"
           } overflow-hidden transition-all ease-in-out duration-300 absolute top-14 left-0 z-5 bg-pri-bg/95`}
         >
           <ul className="flex flex-col items-center gap-8 py-8">
+
+            {/* MOBILE MAIN NAVIGATION */}
             {navigationPaths.map((nav, idx) => {
               const isActive = curPath === nav.url;
 
@@ -185,7 +219,9 @@ const DefaultNavigation = () => {
                 <li key={idx}>
                   <Link
                     href={nav.url}
-                    onClick={() => setIsMobileNavOpen(false)}
+                    onClick={() =>
+                      setIsMobileNavOpen(false)
+                    }
                   >
                     <p
                       className={`${
@@ -206,7 +242,9 @@ const DefaultNavigation = () => {
               <button
                 type="button"
                 onClick={() =>
-                  setIsMobileServicesOpen((prev) => !prev)
+                  setIsMobileServicesOpen(
+                    (prev) => !prev
+                  )
                 }
                 className="flex items-center gap-1"
               >
@@ -224,7 +262,9 @@ const DefaultNavigation = () => {
                   size={16}
                   strokeWidth={1.5}
                   className={`transition-transform duration-200 ${
-                    isMobileServicesOpen ? "rotate-180" : ""
+                    isMobileServicesOpen
+                      ? "rotate-180"
+                      : ""
                   }`}
                 />
               </button>
@@ -233,10 +273,11 @@ const DefaultNavigation = () => {
               <div
                 className={`overflow-hidden transition-all duration-300 ${
                   isMobileServicesOpen
-                    ? "max-h-32 mt-4 opacity-100"
+                    ? "max-h-40 mt-4 opacity-100"
                     : "max-h-0 opacity-0"
                 }`}
               >
+                {/* SAN LORENZO CA */}
                 <Link
                   href={servicePath}
                   onClick={() => {
@@ -244,12 +285,28 @@ const DefaultNavigation = () => {
                     setIsMobileServicesOpen(false);
                   }}
                   className={`block text-center text-sm px-5 py-2 ${
-                    isServicesActive
+                    curPath === servicePath
                       ? "text-sec-gold"
                       : "text-sec-text"
                   }`}
                 >
                   San Lorenzo CA
+                </Link>
+
+                {/* AIRPORT CHAUFFEUR */}
+                <Link
+                  href={airportServicePath}
+                  onClick={() => {
+                    setIsMobileNavOpen(false);
+                    setIsMobileServicesOpen(false);
+                  }}
+                  className={`block text-center text-sm px-5 py-2 ${
+                    isAirportServiceActive
+                      ? "text-sec-gold"
+                      : "text-sec-text"
+                  }`}
+                >
+                  Airport Chauffeur
                 </Link>
               </div>
             </li>
@@ -264,6 +321,8 @@ const DefaultNavigation = () => {
       {/* MOBILE ACTION BUTTON */}
       {!isBookingPage && (
         <div className="w-full py-2 px-4 sm:py-4 flex items-center justify-center gap-2 fixed bottom-0 left-0 z-50 bg-pri-bg/90 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none md:hidden">
+
+          {/* PHONE BUTTON */}
           <Link
             href={`tel:${constants.companyPhone}`}
             className="sm:hidden w-10 h-10 rounded-full bg-card-bg flex items-center justify-center"
@@ -275,11 +334,14 @@ const DefaultNavigation = () => {
             />
           </Link>
 
+          {/* BOOK A RIDE BUTTON */}
           <Link
             href={"/booking"}
             className="h-10 rounded-full flex flex-1 sm:flex-none items-center justify-center gap-2 bg-pri-text sm:bg-pri-gold sm:border sm:border-pri-bg sm:w-2/5 sm:drop-shadow-shadow-glow sm:drop-shadow-xl"
           >
-            <p className="font-medium text-pri-bg">Book A Ride</p>
+            <p className="font-medium text-pri-bg">
+              Book A Ride
+            </p>
 
             <ArrowRight
               size={18}
@@ -302,7 +364,8 @@ const BookingNavigation = ({
 
   //--functions
   function goBack() {
-    const isBookingPage: boolean = curPath === "/booking";
+    const isBookingPage: boolean =
+      curPath === "/booking";
 
     if (isBookingPage) {
       router.replace("/");
@@ -314,6 +377,7 @@ const BookingNavigation = ({
   return (
     <main className="w-full h-dvh">
       <div className="w-full h-full relative">
+
         <button
           onClick={goBack}
           className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-card-bg hover:bg-sec-bg group centralize absolute top-4 md:top-6 left-4 md:left-6 z-10"
