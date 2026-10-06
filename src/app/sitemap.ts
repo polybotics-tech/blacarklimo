@@ -22,5 +22,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: "https://www.blacarklimo.com/chauffeur-service-san-lorenzo-ca",
       lastModified: new Date(),
     },
+    {
+      url: "https://www.blacarklimo.com/airport-chauffeur-service-san-lorenzo-ca",
+      lastModified: new Date(),
+    },
   ];
 }
