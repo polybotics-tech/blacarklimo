@@ -766,7 +766,7 @@ export default function AirportChauffeurServiceSanLorenzoPage() {
 
             <div className="image-card">
               <img
-                src="https://www.blacarklimo.com/assets/images/unnamed (8).jpg"
+                src="https://www.blacarklimo.com/assets/images/business-couple-walking-with-suitcase-parking-lot.jpg"
                 alt="Airport transportation serving San Lorenzo and the East Bay"
               />
             </div>
