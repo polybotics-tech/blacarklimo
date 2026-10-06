@@ -699,7 +699,7 @@ export default function AirportChauffeurServiceSanLorenzoPage() {
           <div className="container two-column reverse-mobile">
             <div className="image-card">
               <img
-                src="https://www.blacarklimo.com/assets/image/business-couple-walking-with-suitcase-parking-lot.jpg"
+                src="https://www.blacarklimo.com/assets/images/business-couple-walking-with-suitcase-parking-lot.jpg"
                 alt="Private limousine ride to the airport from San Lorenzo"
               />
             </div>
