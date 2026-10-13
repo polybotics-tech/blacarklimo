@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +8,7 @@ export const metadata: Metadata = {
 
   alternates: {
     canonical:
-      "https://www.blacarklimo.com/airport-chauffeur-service-san-lorenzo-ca/",
+      "https://www.blacarklimo.com/airport-chauffeur-service-san-lorenzo-ca",
   },
 
   openGraph: {
@@ -18,7 +17,7 @@ export const metadata: Metadata = {
     description:
       "Private airport transportation from San Lorenzo to SFO, OAK, and SJC. Professional chauffeurs, flight tracking, and door-to-door service.",
 
-    url: "https://www.blacarklimo.com/airport-chauffeur-service-san-lorenzo-ca/",
+    url: "https://www.blacarklimo.com/airport-chauffeur-service-san-lorenzo-ca",
 
     siteName: "Blacark Limo",
 
