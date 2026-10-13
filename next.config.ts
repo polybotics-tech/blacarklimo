@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Keep URLs consistent without trailing slashes
+  trailingSlash: false,
+
   experimental: {
     turbopackFileSystemCacheForDev: true,
   },
