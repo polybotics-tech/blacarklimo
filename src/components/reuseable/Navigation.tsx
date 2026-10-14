@@ -3,7 +3,6 @@
 import constants from "@/src/libs/constants";
 import {
   ArrowRight,
-  ChevronDown,
   ChevronLeft,
   Menu,
   Phone,
@@ -15,25 +14,15 @@ import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
 const DefaultNavigation = () => {
-  //--hooks
+  // Hooks
   const curPath = usePathname();
 
-  //--states
+  // States
   const [isMobileNavOpen, setIsMobileNavOpen] =
     React.useState<boolean>(false);
 
-  const [isMobileServicesOpen, setIsMobileServicesOpen] =
-    React.useState<boolean>(false);
-
-  //--variables
+  // Variables
   const isBookingPage: boolean = curPath === "/booking";
-
-  // Existing San Lorenzo service
-  const servicePath = "/chauffeur-service-san-lorenzo-ca/";
-
-  // New Airport Chauffeur service
-  const airportServicePath =
-    "/airport-chauffeur-service-san-lorenzo-ca/";
 
   const navigationPaths: { name: string; url: string }[] = [
     { name: "Home", url: "/" },
@@ -41,26 +30,18 @@ const DefaultNavigation = () => {
     { name: "Our Fleet", url: "/fleet" },
   ];
 
-  // Services active state
-  const isServicesActive =
-    curPath === servicePath ||
-    curPath === airportServicePath;
-
-  const isAirportServiceActive =
-    curPath === airportServicePath;
-
   return (
     <>
       <nav className="w-full sticky top-0 left-0 z-50 bg-pri-bg/70 backdrop-blur-sm">
         <div className="w-full max-w-5xl mx-auto py-4 md:py-2 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
 
           {/* LOGO */}
-          <Link href={"/"}>
+          <Link href="/">
             <div className="flex items-center gap-1">
               <div className="w-5 h-5 rounded-sm overflow-hidden">
                 <Image
                   alt="Blacarklimo Logo"
-                  src={"/assets/images/logo.png"}
+                  src="/assets/images/logo.png"
                   width={20}
                   height={20}
                 />
@@ -94,61 +75,6 @@ const DefaultNavigation = () => {
                 </li>
               );
             })}
-
-            {/* SERVICES AREA DROPDOWN */}
-            <li className="relative group">
-              <button
-                type="button"
-                className="flex items-center gap-1"
-              >
-                <p
-                  className={`${
-                    isServicesActive
-                      ? "font-medium text-sec-gold"
-                      : "hover:text-pri-text"
-                  }`}
-                >
-                  Services Area
-                </p>
-
-                <ChevronDown
-                  size={14}
-                  strokeWidth={1.5}
-                  className="transition-transform duration-200 group-hover:rotate-180"
-                />
-              </button>
-
-              {/* DESKTOP DROPDOWN */}
-              <div className="absolute left-0 top-full pt-3 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
-                <div className="w-72 rounded-lg bg-pri-bg border border-dim-text/30 shadow-xl overflow-hidden">
-
-                  {/* SAN LORENZO CA */}
-                  <Link
-                    href={servicePath}
-                    className={`block px-4 py-3 text-sm hover:bg-sec-bg hover:text-sec-gold transition-colors ${
-                      curPath === servicePath
-                        ? "text-sec-gold"
-                        : "text-sec-text"
-                    }`}
-                  >
-                    San Lorenzo CA
-                  </Link>
-
-                  {/* AIRPORT CHAUFFEUR */}
-                  <Link
-                    href={airportServicePath}
-                    className={`block px-4 py-3 text-sm hover:bg-sec-bg hover:text-sec-gold transition-colors ${
-                      isAirportServiceActive
-                        ? "text-sec-gold"
-                        : "text-sec-text"
-                    }`}
-                  >
-                    Airport Chauffeur
-                  </Link>
-
-                </div>
-              </div>
-            </li>
           </ul>
 
           {/* DESKTOP RIGHT SIDE */}
@@ -170,7 +96,7 @@ const DefaultNavigation = () => {
 
             {!isBookingPage && (
               <Link
-                href={"/booking"}
+                href="/booking"
                 className="hidden md:flex px-8 py-2 rounded-3xl bg-pri-text hover:bg-sec-text text-pri-bg text-xs font-medium"
               >
                 Book A Ride
@@ -180,6 +106,11 @@ const DefaultNavigation = () => {
 
           {/* MOBILE NAVIGATION BUTTON */}
           <button
+            type="button"
+            aria-label={
+              isMobileNavOpen ? "Close menu" : "Open menu"
+            }
+            aria-expanded={isMobileNavOpen}
             className="w-6 h-6 sm:hidden"
             onClick={() =>
               setIsMobileNavOpen((prev) => !prev)
@@ -201,7 +132,7 @@ const DefaultNavigation = () => {
           </button>
         </div>
 
-        {/* MOBILE NAV BAR */}
+        {/* MOBILE NAVIGATION */}
         <div
           className={`sm:hidden w-full ${
             isMobileNavOpen
@@ -210,8 +141,6 @@ const DefaultNavigation = () => {
           } overflow-hidden transition-all ease-in-out duration-300 absolute top-14 left-0 z-5 bg-pri-bg/95`}
         >
           <ul className="flex flex-col items-center gap-8 py-8">
-
-            {/* MOBILE MAIN NAVIGATION */}
             {navigationPaths.map((nav, idx) => {
               const isActive = curPath === nav.url;
 
@@ -236,80 +165,6 @@ const DefaultNavigation = () => {
                 </li>
               );
             })}
-
-            {/* MOBILE SERVICES AREA */}
-            <li className="flex flex-col items-center">
-              <button
-                type="button"
-                onClick={() =>
-                  setIsMobileServicesOpen(
-                    (prev) => !prev
-                  )
-                }
-                className="flex items-center gap-1"
-              >
-                <p
-                  className={`${
-                    isServicesActive
-                      ? "font-medium text-sec-gold"
-                      : ""
-                  }`}
-                >
-                  Services Area
-                </p>
-
-                <ChevronDown
-                  size={16}
-                  strokeWidth={1.5}
-                  className={`transition-transform duration-200 ${
-                    isMobileServicesOpen
-                      ? "rotate-180"
-                      : ""
-                  }`}
-                />
-              </button>
-
-              {/* MOBILE SERVICES DROPDOWN */}
-              <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  isMobileServicesOpen
-                    ? "max-h-40 mt-4 opacity-100"
-                    : "max-h-0 opacity-0"
-                }`}
-              >
-                {/* SAN LORENZO CA */}
-                <Link
-                  href={servicePath}
-                  onClick={() => {
-                    setIsMobileNavOpen(false);
-                    setIsMobileServicesOpen(false);
-                  }}
-                  className={`block text-center text-sm px-5 py-2 ${
-                    curPath === servicePath
-                      ? "text-sec-gold"
-                      : "text-sec-text"
-                  }`}
-                >
-                  San Lorenzo CA
-                </Link>
-
-                {/* AIRPORT CHAUFFEUR */}
-                <Link
-                  href={airportServicePath}
-                  onClick={() => {
-                    setIsMobileNavOpen(false);
-                    setIsMobileServicesOpen(false);
-                  }}
-                  className={`block text-center text-sm px-5 py-2 ${
-                    isAirportServiceActive
-                      ? "text-sec-gold"
-                      : "text-sec-text"
-                  }`}
-                >
-                  Airport Chauffeur
-                </Link>
-              </div>
-            </li>
           </ul>
 
           <p className="text-center text-dim-text text-[10px] py-4 border-t border-dim-text border-dashed">
@@ -321,10 +176,10 @@ const DefaultNavigation = () => {
       {/* MOBILE ACTION BUTTON */}
       {!isBookingPage && (
         <div className="w-full py-2 px-4 sm:py-4 flex items-center justify-center gap-2 fixed bottom-0 left-0 z-50 bg-pri-bg/90 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none md:hidden">
-
           {/* PHONE BUTTON */}
           <Link
             href={`tel:${constants.companyPhone}`}
+            aria-label="Call Blacarklimo"
             className="sm:hidden w-10 h-10 rounded-full bg-card-bg flex items-center justify-center"
           >
             <Phone
@@ -336,7 +191,7 @@ const DefaultNavigation = () => {
 
           {/* BOOK A RIDE BUTTON */}
           <Link
-            href={"/booking"}
+            href="/booking"
             className="h-10 rounded-full flex flex-1 sm:flex-none items-center justify-center gap-2 bg-pri-text sm:bg-pri-gold sm:border sm:border-pri-bg sm:w-2/5 sm:drop-shadow-shadow-glow sm:drop-shadow-xl"
           >
             <p className="font-medium text-pri-bg">
@@ -358,11 +213,9 @@ const DefaultNavigation = () => {
 const BookingNavigation = ({
   children,
 }: BookingNavigationProps) => {
-  //--hooks
   const router = useRouter();
   const curPath = usePathname();
 
-  //--functions
   function goBack() {
     const isBookingPage: boolean =
       curPath === "/booking";
@@ -377,8 +230,9 @@ const BookingNavigation = ({
   return (
     <main className="w-full h-dvh">
       <div className="w-full h-full relative">
-
         <button
+          type="button"
+          aria-label="Go back"
           onClick={goBack}
           className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-card-bg hover:bg-sec-bg group centralize absolute top-4 md:top-6 left-4 md:left-6 z-10"
         >
