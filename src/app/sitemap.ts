@@ -23,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
     },
     {
-      url: "https://www.blacarklimo.com/airport-chauffeur-service-san-lorenzo-ca",
+      url: "https://www.blacarklimo.com/san-jose-ca",
       lastModified: new Date(),
     },
   ];
