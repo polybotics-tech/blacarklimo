@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Luxury Airport Chauffeur Service in San Jose, CA | Blacark Limo",
+  title: "Book Airport Chauffeur Service San Jose, CA | Blacark Limo",
 
   description:
-    "Book a luxury airport chauffeur service in San Jose, CA with Blacark Limo. Private rides to SJC, SFO & OAK, corporate airport transfers, and limo service. Get a quote.",
+    "Blacark Limo offers airport chauffeur service in San Jose, CA. Enjoy private rides to SJC, SFO, and OAK with pro drivers & luxury vehicles. Book your ride now.",
 
   alternates: {
     canonical:
-      "https://www.blacarklimo.com/airport-chauffeur-service-san-jose-ca",
+      "https://www.blacarklimo.com/san-jose-ca",
   },
 
   openGraph: {
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description:
       "Private airport chauffeur service in San Jose, CA with rides to SJC, SFO, and OAK for business travelers, families, hotel guests, and groups.",
 
-    url: "https://www.blacarklimo.com/airport-chauffeur-service-san-jose-ca",
+    url: "https://www.blacarklimo.com/san-jose-ca",
 
     siteName: "Blacark Limo",
 
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
         url: "https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=1200&q=85",
         width: 1200,
         height: 630,
-        alt: "Luxury Airport Chauffeur Service in San Jose, CA - Blacark Limo",
+        alt: "Book Airport Chauffeur Service San Jose, CA | Blacark Limo",
       },
     ],
   },
@@ -36,10 +36,10 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
 
-    title: "Luxury Airport Chauffeur Service in San Jose, CA | Blacark Limo",
+    title: "Book Airport Chauffeur Service San Jose, CA | Blacark Limo",
 
     description:
-      "Private airport chauffeur service in San Jose, CA with rides to SJC, SFO, and OAK for business travelers, families, hotel guests, and groups.",
+      "Blacark Limo offers airport chauffeur service in San Jose, CA. Enjoy private rides to SJC, SFO, and OAK with pro drivers & luxury vehicles. Book your ride now.",
 
     images: [
       "https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=1200&q=85",
@@ -297,7 +297,7 @@ export default function LuxuryAirportChauffeurServiceSanJosePage() {
 
             <div className="image-card">
               <img
-                src="https://www.blacarklimo.com/assets/images/unnamed (5).jpg"
+                src="https://www.blacarklimo.com/assets/images/unnamed.jpg"
                 alt="Luxury airport chauffeur vehicle in San Jose, CA"
               />
             </div>
@@ -368,7 +368,7 @@ export default function LuxuryAirportChauffeurServiceSanJosePage() {
           <div className="container two-column reverse-mobile">
             <div className="image-card">
               <img
-                src="https://www.blacarklimo.com/assets/images/unnamed (5).jpg"
+                src="https://www.blacarklimo.com/assets/images/unnamed (1).jpg"
                 alt="San Jose airport transportation to SJC, SFO and OAK"
               />
             </div>
@@ -482,7 +482,7 @@ export default function LuxuryAirportChauffeurServiceSanJosePage() {
             <div className="corporate-layout">
               <div className="corporate-image">
                 <img
-                  src="https://www.blacarklimo.com/assets/images/unnamed (6).jpg"
+                  src="https://www.blacarklimo.com/assets/images/unnamed (2).jpg"
                   alt="Corporate and executive airport transfer in San Jose"
                 />
               </div>
@@ -607,7 +607,7 @@ export default function LuxuryAirportChauffeurServiceSanJosePage() {
 
             <div className="image-card tall">
               <img
-                src="https://www.blacarklimo.com/assets/images/unnamed (7).jpg"
+                src="https://www.blacarklimo.com/assets/images/unnamed.jpg"
                 alt="Limo airport transfer in San Jose, CA"
               />
             </div>
@@ -619,7 +619,7 @@ export default function LuxuryAirportChauffeurServiceSanJosePage() {
           <div className="container two-column">
             <div className="image-card">
               <img
-                src="https://www.blacarklimo.com/assets/images/unnamed (8).jpg"
+                src="https://www.blacarklimo.com/assets/images/unnamed (2).jpg"
                 alt="Private airport chauffeur service in San Jose, CA"
               />
             </div>
@@ -954,7 +954,7 @@ export default function LuxuryAirportChauffeurServiceSanJosePage() {
         rgba(5, 5, 6, .78) 48%,
         rgba(5, 5, 6, .35) 100%
       ),
-      url("https://www.blacarklimo.com/assets/images/unnamed (8).jpg")
+      url("https://www.blacarklimo.com/assets/images/unnamed.jpg")
       center/cover no-repeat;
   }
 
@@ -1715,4 +1715,3 @@ export default function LuxuryAirportChauffeurServiceSanJosePage() {
 `}</style>    </>
   );
 }
-
